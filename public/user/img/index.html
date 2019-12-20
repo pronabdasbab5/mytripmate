@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MyTRIPMATE</title>
+    <!--== META TAGS ==-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- FAV ICON -->
+    <link rel="shortcut icon" href="images/globe.png">
+    <!-- GOOGLE FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins%7CQuicksand:400,500,700" rel="stylesheet">
+    <!-- FONT-AWESOME ICON CSS -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!--== ALL CSS FILES ==-->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/mob.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+    <style type="text/css">
+        .papa {
+            margin-top: 13px;
+        }
+
+        * {box-sizing: border-box}
+
+/* Slideshow container */
+.slideshow-container {
+  position: relative;
+  background: #3776bd;
+}
+
+/* Slides */
+.mySlides {
+  display: none;
+  
+  text-align: center;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -30px;
+  padding: 16px;
+  color: #888;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  position: absolute;
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+  color: white;
+}
+
+/* The dot/bullet/indicator container */
+.dot-container {
+    text-align: center;
+    padding: 20px;
+    
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+/* Add a background color to the active dot/circle */
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Add an italic font style to all quotes */
+q {font-style: italic;color: #fff;
+}
+
+/* Add a blue color to the author */
+.author {color: yellow;}
+a:hover, a:focus {
+    color: #2a6496;
+    text-decoration: none;
+}
+.dropdown-content {
+    background-color: #c5c4c4;
+}
+    </style>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <section>
+        <div class="ed-mob-menu">
+            <div class="ed-mob-menu-con">
+                <div class="ed-mm-left">
+                   
+                        <a href="main.html">MyTRIPMATE</a>
+                    </div>
+                </div>
+                <div class="ed-mm-right">
+                    <div class="ed-mm-menu">
+                        <a href="#!" class="ed-micon"><i class="fa fa-bars"></i></a>
+                        <div class="ed-mm-inn">
+                            <a href="#!" class="ed-mi-close"><i class="fa fa-times"></i></a>
+                            <h4><a href="index.html"></a> Home </h4>                         
+                            <h4><a href="index.html#hotel"></a>Hotel</h4>
+                            <h4><a href="index.html#car"></a>Cabs</h4>
+                            <h4><a href="index.html#holiday"></a>Holiday Packages</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--HEADER SECTION-->
+    <section>
+        <!-- TOP BAR -->
+        <div class="ed-top" >
+            <div class="container" >
+                <div class="row">
+                    <div class="col-md-12">
+                       
+                          <h6 align="Right">  
+                                <i class="fa fa-phone" style="font-size: 15px"></i>&nbsp;&nbsp;<a>+91 94353-38100 | 38900</a>&nbsp;&nbsp;
+                                 <i class="fa fa-envelope-o" style="font-size: 15px"></i>&nbsp;&nbsp;<a>mail@mytripmate.co</a>
+                           </h6>
+                                               
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOGO AND MENU SECTION -->
+        <div class="top-logo" data-spy="affix" data-offset-top="250">
+            <div class="container"  style="height: 76px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wed-logo"><img src="img/logo1.jpg" alt="" style="margin-left: -1px; margin-top: 6px" /></a>
+                        </div>
+                        <div class="main-menu" style="font-size: 24">
+                            <ul style="margin-top: 27px ">
+                                <li><a href="index.html" class="mm-arr" style="font-size: 20px;"><i class="fa fa-home" aria-hidden="true"></i></a>
+                                </li>
+                                <li class="about-menu"><a href="#holiday" class="mm-arr" style="font-size: 15px">Holiday</a>
+                                    
+                                    <!-- 
+                                    <div class="mm-pos">
+                                        <div class="about-mm m-menu">
+                                            <div class="m-menu-inn">
+                                                <div class="mm1-com mm1-s1">
+                                                    <div class="ed-course-in">
+                                                        <a class="course-overlay menu-about" href="all-package.html">
+                                                            <img src="images/sight/5.jpg" alt="">
+                                                            <span>Popular Package</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="mm1-com mm1-s2">
+                                                    <p>Want to change the world? At Berkeley we’re doing just that. When you join the Golden Bear community, you’re part of an institution that shifts the global conversation every single day.</p>
+                                                    <a href="all-package.html" class="mm-r-m-btn">Read more</a>
+                                                </div>
+                                                <div class="mm1-com mm1-s3">
+                                                    <ul>
+                                                        <li><a href="booking-all.html">All Booking</a></li>
+                                                        <li><a href="booking-tour-package.html">Tour Package Booking</a></li>
+                                                        <li><a href="booking-hotel.html">Hotel Booking</a></li>
+                                                        <li><a href="booking-car-rentals.html">Car Rentals Booking</a></li>
+                                                        <li><a href="booking-flight.html">Flight Booking</a></li>
+                                                        <li><a href="booking-slider.html">Slider Booking</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="mm1-com mm1-s4">
+                                                    <ul>
+                                                        <li><a href="all-package.html">All Package</a></li><li><a href="family-package.html">Family Package</a></li>
+                                                        <li><a href="honeymoon-package.html">Honeymoon Package</a></li>
+                                                        <li><a href="group-package.html">Group Package</a></li>
+                                                        <li><a href="weekend-package.html">WeekEnd Package</a></li>
+                                                        <li><a href="regular-package.html">Regular Package</a></li>
+                                                        <li><a href="custom-package.html">Custom Package</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </li>
+                                
+                                <li><a href="#hotel" style="font-size: 15px">Hotels</a></li>
+                                <!--<li><a class='dropdown-button ed-sub-menu' href='#' data-activates='dropdown1'>Courses</a></li>-->
+                               
+                                <li><a href="#car" style="margin-right: 250px;font-size: 15px">Cabs</a></li>
+                               
+
+                                 <!-- <li><a href="" style="line-height: 14px; font-size: 9px,"><button style="color: black; text-decoration: none;" > My Bookings <i class="fa fa-user-circle-o"></i></a></li> -->
+                                <li><a href="#" target="_blank" style="line-height:22px;font-size: 11px;"><button style="color: black;line-height: 1.5;" >My Bookings <i class='fa fa-user-circle-o'></i></button></a></li>
+                                 <li><a href="https://www.instamojo.com/@mytripmate/" target="_blank" style="line-height:22px;font-size: 11px;"><button style="color: black;line-height: 1.5;" >Pay Online <i class='fas fa-wallet'></i></button></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+	
+
+		<!-- END TOP SEARCH BOX -->
+    </section>
+    <!--END HEADER SECTION-->
+	
+	<!--HEADER SECTION-->
+	<section>
+		<div class="v2-hom-search">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6">
+					<div class="v2-ho-se-ri">
+						<h5 style="padding-top: 0px;">We Make Your Trip Special</h5>
+						<h1>Tour Package booking now!</h1>
+						<p style="padding-top: 25px">Experience the various exciting tour and travel packages and Make hotel reservations, find vacation packages, search cheap hotels and events</p>
+						<div class="tourz-hom-ser v2-hom-ser">
+							<ul>
+								<li>
+									<a href="booking-tour-package.html" class="waves-effect waves-light btn-large tourz-pop-ser-btn"><img src="images/icon/2.png" alt=""> Tour</a>
+								</li>
+								<li>
+									<a href="booking-flight.html" class="waves-effect waves-light btn-large tourz-pop-ser-btn"><img src="images/icon/31.png" alt=""> Flight</a>
+								</li>
+								<li>
+									<a href="booking-car-rentals.html" class="waves-effect waves-light btn-large tourz-pop-ser-btn"><img src="images/icon/30.png" alt=""> Car Rentals</a>
+								</li>
+								<li>
+									<a href="booking-hotel.html" class="waves-effect waves-light btn-large tourz-pop-ser-btn"><img src="images/icon/1.png" alt=""> Hotel</a>
+								</li>								
+							</ul>
+						</div>
+					</div>						
+					</div>	
+					<div class="col-md-6">
+					<div class="">
+						<form class="v2-search-form">
+                            <div class="v2-ho-se-ri">
+                                <h2 style="text-align: center;font-size: 26px;margin: 0px;">Let us Help For Your Trip</h2>
+                            </div>
+							<div class="row">
+                                <div class="input-field col s6">
+                                   <input type="text" id="select-city-1" class="autocomplete validate">
+                                    <label for="select-city-1">Where Do You Want To Go?</label> 
+                                </div>
+                                <div class="input-field col s6">
+                                   <select >
+                                        <option value="" disabled selected>Service You Want</option>
+                                        <option value="1">Holiday Pakage</option>
+                                        <option value="2">Cab Service</option>
+                                        <option value="3">Hotel Rooms</option>                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="v2-ho-se-ri">
+                                <h4 style="text-align: center;">Trip Information</h4>
+                                 </div> -->
+								<div class="row">
+								<div class="input-field col s6">
+                                   <input type="text" id="select-city-1" class="autocomplete validate">
+                                    <label for="select-city-1">Name</label> 
+                                </div>
+                                <div class="input-field col s6">
+                                   <input type="text" id="select-city-1" class="autocomplete validate">
+                                    <label for="select-city-1">Email ID</label> 
+                                </div>
+							</div>
+							
+							<div class="row">
+								<div class="input-field col s6">
+									<input type="text" id="select-city-1" class="autocomplete validate">
+                                    <label for="select-city-1">Mobile Number</label> 
+								</div>
+								<div class="input-field col s6">
+									<select>
+										<option value="" disabled selected>No Of Adults</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="1">4</option>
+										<option value="1">5</option>
+										<option value="1">6</option>
+                                        <option value="2">7</option>
+                                        <option value="3">8</option>
+                                        <option value="1">9</option>
+                                        <option value="1">10</option>
+                                        <option value="1">11-15</option>											
+									</select>
+								</div>
+							</div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" id="from" name="from">
+                                    <label for="from">Trip Start Date</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="text" id="to" name="to">
+                                    <label for="to">Trip End Date</label>
+                                </div>
+                            </div>							
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="text" id="queries" class="autocomplete validate">
+                                     <label for="queries">Messages</label> 
+                                </div>
+                            </div>
+													
+							<div class="row">
+								<div class="input-field col s12">
+									<input type="submit" value="Submit" class="waves-effect waves-light tourz-sear-btn v2-ser-btn">
+								</div>
+							</div>
+						</form>
+					</div>						
+					</div>				
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--END HEADER SECTION-->
+    <section id="holiday">
+        <div class="rows pad-bot-redu tb-space">
+            <div class="container">
+                <!-- TITLE & DESCRIPTION -->
+                <div class="spe-title">
+                    <h2>Holiday<span> Packages</span></h2>
+                    <!-- <div class="title-line">
+                        <div class="tl-1"></div>
+                        <div class="tl-2"></div>
+                        <div class="tl-3"></div>
+                    </div> -->
+                </div>
+                <div>
+                    <!-- TOUR PLACE 1 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <!-- OFFER BRAND -->
+                        <div class="band"> <img src="images/band.png" alt="" /> </div>
+                        <!-- IMAGE -->
+                        <div class="v_place_img"> <img src="images/t5.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <!-- TOUR TITLE & ICONS -->
+                        <div class="b_pack rows">
+                            <!-- TOUR TITLE -->
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">Rio de Janeiro<span class="v_pl_name">(Brazil)</span></a></h4> </div>
+                            <!-- TOUR ICONS -->
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 2 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <!-- OFFER BRAND -->
+                        <div class="band"> <img src="images/band1.png" alt="" /> </div>
+                        <!-- IMAGE -->
+                        <div class="v_place_img"> <img src="images/t1.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <!-- TOUR TITLE & ICONS -->
+                        <div class="b_pack rows">
+                            <!-- TOUR TITLE -->
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">Paris<span class="v_pl_name">(England)</span></a></h4> </div>
+                            <!-- TOUR ICONS -->
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 3 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <div class="v_place_img"><img src="images/t2.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <div class="b_pack rows">
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">South India<span class="v_pl_name">(India)</span></a></h4> </div>
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 4 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <div class="v_place_img"><img src="images/t3.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <div class="b_pack rows">
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">The Great Wall<span class="v_pl_name">(China)</span></a></h4> </div>
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 5 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <div class="v_place_img"><img src="images/t4.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <div class="b_pack rows">
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">Nail Island<span class="v_pl_name">(Andaman)</span></a></h4> </div>
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TOUR PLACE 6 -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 b_packages">
+                        <div class="v_place_img"><img src="images/t6.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        <div class="b_pack rows">
+                            <div class="col-md-8 col-sm-8">
+                                <h4><a href="tour-details.html">Mauritius<span class="v_pl_name">(Indiana)</span></a></h4> </div>
+                            <div class="col-md-4 col-sm-4 pack_icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><img src="images/clock.png" alt="Date" title="Tour Timing" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/info.png" alt="Details" title="View more details" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/price.png" alt="Price" title="Price" /> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="images/map.png" alt="Location" title="Location" /> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	<!--====== HOME PLACES ==========-->
+    <section id="car">
+        <div class="container">
+    <div class="spe-title" ><h2>Cabs- <span>Car Rental</span></h2></div>
+    </div>
+        <div class="offer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="offer-l"> <span class="ol-1"></span> <span class="ol-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span> <span class="ol-4"> Get Best Car fleet</span>                            <span class="ol-4"><p>Get your driver by handpicked</p></span>
+                            <!-- <ul>
+                                <li class="wow fadeInUp" data-wow-duration="0.5s">
+                                    <i class="fa fa-phone" style="font-size:48px;color:#fff"></i><span>Give Us a Call</span>
+                                </li>
+                                <li class="wow fadeInUp" data-wow-duration="0.7s">
+                                    <i class="fa fa-map-marker" style="font-size:48px;color:#fff"></i><span>Visit us </span>
+                                </li>
+                                <li class="wow fadeInUp" data-wow-duration="0.9s">
+                                    <i class="fa fa-envelope" style="font-size:48px;color:#fff"></i><span>Send us an email </span>
+                                </li>
+                                <li class="wow fadeInUp" data-wow-duration="1.1s">
+                                    <i class="fa fa-whatsapp" style="font-size:48px;color:#fff"></i><span>Wattsapp Chat with us</span>
+                                </li>
+                            </ul> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="offer-r">
+                            <div class="or-1"> <span class="or-11">WITH</span> <span class="or-12"> US</span> </div>
+                            <div class="or-2"> <span class="or-21">MAKE</span> <span class="or-22">YOUR DRIVE</span> <span class="or-23">IN YOUR WAY </span>TIME <span class="or-24"></span> <span class="or-25"></span> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+
+
+
+  
+
+
+<section>
+        <div class="rows pad-bot-redu tb-space">
+            <div class="container">
+                <!-- TITLE & DESCRIPTION -->
+                <div class="spe-title">
+                    <h2><span>Hot Deal </span>Of the Day</h2>
+                    
+                    
+                <!--text-->
+                <div>                   
+                    <div class="col-md-4 col-sm-4">                 
+                            <h4 align="center"><span>This is Image 1</span></h4>
+                        </div>
+                    
+                    <div class="col-md-4 col-sm-4">                  
+                        
+                            <div>
+                                <h4 align="center"><span>This is Image 2</span></h4>
+                            </div>
+                        </div>
+                    <!-- TOUR PLACE 3 -->
+                    <div class="col-md-4 col-sm-4">                  
+                        
+                            <div>
+                                <h4 align="center"><span>This is Image 3</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Text -->
+                    
+                    <div class="col-md-4 col-sm-4">  
+                        <div class="v_place_img"><img src="images/t3.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        
+                    </div>
+                    <!-- TOUR PLACE 5 -->
+                    <div class="col-md-4 col-sm-4">  
+                        <div class="v_place_img"><img src="images/t4.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        
+                    </div>
+                    <!-- TOUR PLACE 6 -->
+                    <div class="col-md-4 col-sm-4">  
+                        <div class="v_place_img"><img src="images/t6.png" alt="Tour Booking" title="Tour Booking" /> </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  <!--====== HOME HOTELS ==================================================================================================-->
+
+    <section id="hotel" style="margin-top: 50px"> 
+        <div class="container">
+            
+    <div class="spe-title"><h2>Book <span> HOTEL</span> Now!</h2>
+        </div>
+   <div class="bookhotel" style="background-image: url(img/001.jpg); height: 350px">
+    <div class="container">
+      <hr align="left" style="width: 35%; "><h3 align="left" style=" color: white; padding-left: 100px"> Top Hotel and Resort </h3><hr align="left" style="width: 35%; "> </div>
+      </div>
+    <div style="float: right; margin-top: -64px;margin-right: 30px;"> <a href="#" style=" padding-left:10px ;padding-right:10px; color: darkorange; background-color: wheat;font-size: 23px; border-radius: 25px;margin-bottom: 10px;">Book Now</a> </div>
+        
+        
+            
+                
+<!--=        <div class="form tb-space" style="padding-top: 41px;">
+            <div class="rows container">
+                <div class="col-md-12  form_1">
+                    <form id="home_form" name="home_form" action="mail/send.php">
+                        <ul>
+                            <li>
+                                <input type="text" name="city" value="" id="city" placeholder="Select City" required="">
+                            </li>
+                            <li>
+                                <input type="text" id="from" name="from" placeholder="Check In">
+                            </li>
+                            <li>
+                                <input type="text" id="from" name="from" placeholder="Check In">
+                            </li>
+                            <li>
+                               <input type="section" id="room">
+                            </li>
+                           
+                            <li>
+                                <input type="submit" value="Submit" id="send_button" style="margin-left: 422px;width: 43%;">
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+               
+            </div>
+        </div>    ==-->
+   
+        
+    </div>
+                    <!-- TOP SEARCH BOX -->
+        <div class="search-top">
+            <div class="container">
+                <div class="row" style="margin-left: -25px;">
+                    <div class="col-md-12">
+                        <div class="search-form">
+                        <form class="row">
+                            <div class="input-field col-md-3" style="width: 200px;">
+                                <input type="text" id="select-search">
+                                <label for="select-search" class="search-hotel-type">&nbsp;&nbsp;&nbsp;&nbsp;Location</label>
+                            </div>
+                            <div class="input-field col-md-1" style="width: 200px;">
+                                 <input type="text" id="from-1" name="from">
+                                    <label for="from-1">Check In</label>
+                               
+                            </div>
+                            <div class="input-field col-md-1" style="width: 200px;">
+                                 <input type="text" id="to-1" name="to">
+                                    <label for="to-1">Check Out</label>
+                               
+                            </div>
+                            <div class="input-field col-md-1" style="width: 200px;">
+                                    <select>
+                                        <option value="" disabled selected>No of adults</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="1">4</option>
+                                        <option value="1">5</option>
+                                        <option value="1">6</option>
+                                    </select>
+                                </div>
+                                <div class="input-field col-md-1" style="width: 200px;">
+                                    <select>
+                                        <option value="" disabled selected>No of childrens</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="1">4</option>
+                                        <option value="1">5</option>
+                                        <option value="1">6</option>                                            
+                                    </select>
+                                </div>
+                            
+                            <div class="input-field col-md-2"  style="width: 200px;">
+                                <input type="submit" value="search" class="waves-effect waves-light tourz-sear-btn"> </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END TOP SEARCH BOX -->
+    </section>
+    
+<!--====== HOME HOTELS ==================================================================================================-->
+
+<section>
+	<div class="rows tips tips-home tb-space home_title" >
+		<div class="col-12"<div class="col-12" style="padding-bottom: 28px;">
+            <div class="container tips_1">               
+                <!-- CUSTOMER TESTIMONIALS -->
+                <div class="col-lg-6 col-md-12">
+                    <div style="padding-left: 200px;"><h3>Happy Moments</h3></div>
+                       <div class="slideshow-container" >
+
+                            <div class="mySlides">
+                              <img src="images/Happy Moments/Atul & Family2.jpg" style="height: 400px">
+                              <p style=" margin-top: -32px;position: absolute;color: wheat;background: #00000094; font-size: 15px;margin-left: 200px; padding-left:10px ;padding-right: 10px ">Mr. & Mrs Atul Saini</p> 
+                            </div>
+
+                            <div class="mySlides">
+                              <img src="images/Happy Moments/Atul & Family.jpg" style="height: 400px">
+                              <p style=" margin-top: -32px;position: absolute;color: wheat;background: #00000094; font-size: 15px;margin-left: 200px; padding-left:10px ;padding-right: 10px ">Mr. & Mrs Atul Saini</p>  
+                            </div>
+
+                            <div class="mySlides">
+                              <img src="images/Happy Moments/Hemant Agarkar Boating@Umngot River -Dawki.jpg" style="height: 400px"><p style=" margin-top: -35px;position: absolute;color: wheat;background: #00000094; font-size: 15px">Mr. Hemant Agarkar & family Boating @ Umngot River, Dawki. Meghalaya</p> 
+                            </div>
+                            <div class="mySlides">
+                              <img src="images/Happy Moments/Hemant Agarkar @Living RootBridge.jpg" style="height: 400px">
+                              <p style=" margin-top: -40px;position: absolute;color: wheat;background: #00000094; font-size: 14px;margin-left: 10px; padding-left:10px ;padding-right: 10px">Mr. Hemant Agarkar & family @ Living RootBridge Moulynong. Meghalaya</p>  
+                            </div>
+                            <div class="mySlides">
+                              <img src="images/Happy Moments/Hemant Agarkar Family.jpg" style="height: 400px">
+                              <p style=" margin-top: -32px;position: absolute;color: wheat;background: #00000094; font-size: 15px;margin-left: 15px; padding-left:10px ;padding-right: 10px">Mr. Hemant Agarkar & family enjoying @ Cherapunjee. Meghalaya</p> 
+                            </div>
+
+                          <!--   <a class="prev" onclick="plusSlides(-1)">❮</a>
+                            <a class="next" onclick="plusSlides(1)">❯</a> -->
+
+                            </div>
+
+                            <div class="dot-container">
+                              <span class="dot" onclick="currentSlide(1)"></span> 
+                              <span class="dot" onclick="currentSlide(2)"></span> 
+                              <span class="dot" onclick="currentSlide(3)"></span>
+                              <span class="dot" onclick="currentSlide(4)"></span> 
+                              <span class="dot" onclick="currentSlide(5)"></span> 
+                            </div>
+
+                            <script>
+                                    var slideIndex = 0;
+                                    showSlides();
+
+                                    function showSlides() {
+                                      var i;
+                                      var slides = document.getElementsByClassName("mySlides");
+                                      var dots = document.getElementsByClassName("dot");
+                                      for (i = 0; i < slides.length; i++) {
+                                        slides[i].style.display = "none";  
+                                      }
+                                      slideIndex++;
+                                      if (slideIndex > slides.length) {slideIndex = 1}    
+                                      for (i = 0; i < dots.length; i++) {
+                                        dots[i].className = dots[i].className.replace(" active", "");
+                                      }
+                                      slides[slideIndex-1].style.display = "block";  
+                                      dots[slideIndex-1].className += " active";
+                                      setTimeout(showSlides, 3000); // Change image every 2 seconds
+                                    }
+                            </script>                 
+                   
+                </div>
+                 <!-- TIPS BEFORE TRAVEL -->
+                <div class="col-lg-6 col-md-12">
+                    <div style="padding-left: 170px;"><h3>Review & Rating</h3></div>
+                    
+                    <div><img src="images/happy_moment.jpg" style=""></div>
+                    <div><p style="text-align: justify;">World's leading tour and travels Booking website,Over 30,000 packages worldwide. World's leading tour and travels Booking website,Over 30,000 packages worldwide.</p></div>
+                </div>
+            </div>
+            </div>
+        </div>   
+	</div>
+</section>
+<section style="margin-bottom: 10px;">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container">
+<h3 style="text-align:center;border-bottom:solid 1px #eee">Our Clients</h3>
+    <div class="row">
+        <div class="col-md-2 col-md-12">
+         <!--   <img src="images/Client Logo/flipkart.jpg" style="height:80px;">  -->
+        </div>
+        <div class="col-md-2 col-md-12">
+           <img src="images/Client Logo/flipkart.jpg" style="height:80px;"> 
+        </div>
+        <div class="col-md-2 col-md-12">
+            <img src="images/Client Logo/Hindustan colas.jpg" style="height:80px;">
+        </div>
+        <div class="col-md-2 col-md-12">
+            <img src="images/Client Logo/huawei_logo.png" style="height:80px;">
+        </div>
+        <div class="col-md-2 col-md-12">
+            <img src="images/Client Logo/LOGO NBCC.jpg" style="height:80px;">
+        </div>
+        <div class="col-md-2 col-md-12">
+          <!--  <img src="images/Client Logo/flipkart.jpg" style="height:80px;">  -->
+        </div>
+    </div>
+
+
+   <!--  <div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+                <div id="Carousel" class="carousel slide">
+                 
+                <ol class="carousel-indicators" style="margin-bottom: -25px">
+                    <li data-target="#Carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#Carousel" data-slide-to="1"></li>
+                    <li data-target="#Carousel" data-slide-to="2"></li>
+                </ol>
+                 
+             
+                <div class="carousel-inner">
+                    
+                <div class="item active">
+                 <div class="row">
+                   <div class="col-md-2 col-xs-4"><a href="http://reg.thonburi-u.ac.th/registrar/home.asp" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/1.jpg" alt="Image" style="height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.spu.ac.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/2.jpg" alt="Image" style="height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.spu.ac.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/3.png" alt="Image" style="height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="https://www.mahidol.ac.th/th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/4.jpg" alt="Image" style="height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.kkopenzoo.com/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/5.jpg" alt="Image" style="height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.songkhlazoo.com/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/6.jpg" alt="Image" style="height:80px;"></a></div>
+                 </div>
+                </div>
+                 
+                <div class="item">
+                 <div class="row">
+                   <div class="col-md-2 col-xs-4"><a href="http://www.zoothailand.org/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/7.jpg" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.diw.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/17.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.dss.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/9.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.dip.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/10.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.dpim.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/11.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.nstda.or.th/index.php" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/12.jpg" alt="Image" style="max-height:80px;"></a></div>
+                 </div>
+                </div>
+                 
+                <div class="item">
+                 <div class="row">
+                   <div class="col-md-2 col-xs-4"><a href="http://www.oaep.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/13.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.ops.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/14.jpg" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="/www.tisi.go.th" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/15.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="/www.oie.go.th/" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/16.png" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://reg.thonburi-u.ac.th/registrar/home.asp" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/1.jpg" alt="Image" style="max-height:80px;"></a></div>
+                   <div class="col-md-2 col-xs-4"><a href="http://www.spu.ac.th" class="thumbnail"><img src="https://tmaxtech.co.th/images/Partner/2.jpg" alt="Image" style="height:80px;"></a></div>
+                 </div>
+                </div>
+                 
+
+                 
+  </div>
+ </div> -->
+</div>
+
+<!-- <script>
+$(document).ready(function() {
+    $('#Carousel').carousel({
+        interval: 3000
+    })
+});
+</script> -->
+</section>
+<!--<section>
+<div class="container">
+    <a > <img src="img/client.jpg" style=" padding-left: 70px;padding-right: 70px;max-height: 70px"> </a>
+</div>
+
+</section>-->
+	<!--
+	<section>
+		<div class="rows">
+			<div class="footer1 home_title tb-space">
+				<div class="pla1 container">
+					<!-- FOOTER OFFER 1 -
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class="disco">
+							<h3>30%<span>OFF</span></h3>
+							<h4>Eiffel Tower,Rome</h4>
+							<p>valid only for 24th Dec</p> <a href="booking.html">Book Now</a> </div>
+					</div>
+					<!-- FOOTER OFFER 2 
+					<div class="col-md-3 col-sm-6 col-xs-12">
+						<div class="disco1 disco">
+							<h3>42%<span>OFF</span></h3>
+							<h4>Colosseum,Burj Al Arab</h4>
+							<p>valid only for 18th Nov</p> <a href="booking.html">Book Now</a> </div>
+					</div>
+					<!-- FOOTER MOST POPULAR VACATIONS
+					<div class="col-md-6 col-sm-12 col-xs-12 foot-spec footer_places">
+						<h4><span>Most Popular</span> Vacations</h4>
+						<ul>
+							<li><a href="tour-details.html">Angkor Wat</a> </li>
+							<li><a href="tour-details.html">Buckingham Palace</a> </li>
+							<li><a href="tour-details.html">High Line</a> </li>
+							<li><a href="tour-details.html">Sagrada Família</a> </li>
+							<li><a href="tour-details.html">Statue of Liberty </a> </li>
+							<li><a href="tour-details.html">Notre Dame de Paris</a> </li>
+							<li><a href="tour-details.html">Taj Mahal</a> </li>
+							<li><a href="tour-details.html">The Louvre</a> </li>
+							<li><a href="tour-details.html">Tate Modern, London</a> </li>
+							<li><a href="tour-details.html">Gothic Quarter</a> </li>
+							<li><a href="tour-details.html">Table Mountain</a> </li>
+							<li><a href="tour-details.html">Bayon</a> </li>
+							<li><a href="tour-details.html">Great Wall of China</a> </li>
+							<li><a href="tour-details.html">Hermitage Museum</a> </li>
+							<li><a href="tour-details.html">Yellowstone</a> </li>
+							<li><a href="tour-details.html">Musée d'Orsay</a> </li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	-====== FOOTER 2 ==========-->
+
+	<section>
+		<div class="rows">
+			<div class="footer">
+				<div class="container">
+					<div class="foot-sec2">
+						<div>
+							<div class="row" style=" width: 109%;">
+								<div class="col-sm-8 foot-spec foot-com">                                    
+                                   <div><h4 style="margin-bottom: 6px;">N<span>avigation...</span></h4>
+									<ul class="two-columns">
+                                        <li><a href="#">Company<a><a> | </a>
+                                        <a href="#">About Us</a><a> | </a>
+                                        <a href="#">Career</a><a> | </a>
+                                        <a href="#">Contact Us</a></li>
+                                    </ul>
+								    </div>
+                                    <div><h4 style="margin-bottom: 6px;">S<span>ervice Offered...</span></h4>
+                                    <ul class="two-columns">
+                                      <li><a href="#">Holiday Package  </a> <a> | </a>
+                                        <a href="#">Cabs Booking </a> <a> | </a>
+                                        <a href="#">Hotel Booking  </a></li> 
+                                    </ul>
+                                    </div>
+									<div><h4 style="margin-bottom: 6px;">I<span>mportant Links...</span></h4>
+									<ul class="two-columns">
+									 <li>
+									 <a href="#">T&C</a> <a> | </a>
+									 <a href="#">Cancellation Policies</a> 
+									</ul>
+								</div>
+                                </div>
+                                <div class="col-sm-3 foot-spec foot-com" >
+                                    <h4>R<span>each Us... </span></h4>
+                                    <p># 63, 2nd floor, Kekuranagar, Ganeshguri, GS Road, Guwahati. Assam. 781006. India</p>
+                                    <!-- <i class="fa fa-envelope-o" style="font-size: 15px"></i>&nbsp;&nbsp;<a>booking@mytripmate.co</a>
+ -->                                    <p style="margin-bottom: 0px"> <span class="strong" style="font-size: 12px; ">Sales : </span> <span class="highlighted">9435338900 | 9435338900</span> </p>                                       
+                                      <i class="fa fa-envelope-o" style="font-size: 15px"></i>&nbsp;&nbsp;<a>mail@mytripmate.co</a><br>
+
+                                    <p> <span class="strong" style="font-size: 12px">Deploy : </span> <span class="highlighted">9864138100</span> </p>
+                                </div>
+								<!--<div class="col-sm-3 foot-social foot-spec foot-com">
+									<h4><span>Follow</span> with us</h4>
+									<p>Join the thousands of other There are many variations of passages of Lorem Ipsum available</p>
+									<ul>
+										<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
+										
+										<li><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
+									</ul>
+								</div>-->
+							
+
+						</div>
+					</div>
+				</div>
+                <div class="db-pay-card">
+                            <h5></h5><img src="images/cards.png" alt="" /> </div>
+			</div>
+
+		</div>
+
+	</section>
+	<!--====== FOOTER - COPYRIGHT ==========-->
+	<section>
+		<div class="rows copy">
+			<div class="container">
+				<p>Copyrights © 2018 Company Name. All Rights Reserved. Developed By Webinfotech</p>
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="icon-float">
+			<ul>
+				<li><a href="#" class="fb1"><i class="fa fa-facebook" aria-hidden="true"></i></a> </li>
+				<li><a href="#" class="wa1"><i class="fa fa-whatsapp" aria-hidden="true"></i></a> </li>
+				<li><a href="#" class="sh1"><i class="fa fa-envelope-o" aria-hidden="true"></i></a> </li>
+			</ul>
+		</div>
+	</section>
+	<!--========= Scripts ===========-->
+	<script src="js/jquery-latest.min.js"></script>
+	<script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/materialize.min.js"></script>
+	<script src="js/custom.js"></script>
+</body>
+
+</html>

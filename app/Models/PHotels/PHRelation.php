@@ -8,5 +8,5 @@ class PHRelation extends Model
 {
     protected $table = 'package_hotel_relation';
 
-    protected $fillable = ['packageId', 'hotelId'];
+    protected $fillable = ['packageId', 'hotelType', 'hotelId'];
 }

@@ -7,7 +7,7 @@
       <div class="col-md-12">
         <div class="search-form">
           <center>
-            <form>
+            {{-- <form>
               <div class="col-md-3">
                 <div class="input-field">
                   <input type="text" id="select-search" class="hotelsearch2">
@@ -31,7 +31,7 @@
                   </a>
                 </div>
               </div>
-            </form>
+            </form> --}}
             </div>
         </div>
       </div>

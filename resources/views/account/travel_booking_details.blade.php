@@ -166,12 +166,46 @@
                 </td>
               </tr>
               <tr>
-                <td>Payment Status
+                <td>Price
                 </td>
                 <td>:
                 </td>
                 <td>
-                  <span class="db-not-done">
+                  <i class="fa fa-rupee-sign">
+                  </i> 
+                  {{ $pbbdetailsData[0]->payableAmount }}
+                </td>
+              </tr>
+              <tr>
+                <td>Paid
+                </td>
+                <td>:
+                </td>
+                <td>
+                  <i class="fa fa-rupee-sign">
+                  </i> 
+                  {{ $pbbdetailsData[0]->paid_amount }}
+                </td>
+              </tr>
+              @php
+                $remaining_amount = $pbbdetailsData[0]->payableAmount - $pbbdetailsData[0]->paid_amount;
+              @endphp
+              @if($remaining_amount > 0)
+                <tr>
+                    <td>Remaining
+                    </td>
+                    <td>:
+                    </td>
+                    <td>
+                      <i class="fa fa-rupee-sign">
+                      </i> 
+                      {{ $pbbdetailsData[0]->remaining_amount }}
+                    </td>
+                  </tr>
+              @endif
+              <tr>
+                <td>Payment Status
+                    <span class="db-not-done">
                     @if($pbbdetailsData[0]->paymentStatus == 1)
                         {{ "Paid" }}
                     @else
@@ -179,15 +213,34 @@
                     @endif
                   </span>
                 </td>
+                <td>:
+                </td>
+                <td>
+                  @if($remaining_amount > 0)
+                    <form method="POST" action="{{ route('pay_pending') }}" autocomplete="off">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="amount">
+                                <input type="hidden" name="booking_id" value="{{ encrypt($pbbdetailsData[0]->id) }}">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="submit" name="submit" value="Pay">
+                            </div>
+                        </div>
+                    </form>
+                    @endif
+                </td>
               </tr>
             </tbody>
           </table>
-          <div class="db-mak-pay-bot">
+            
+          {{-- <div class="db-mak-pay-bot">
             <a href="#" class="waves-effect waves-light btn-large">Make Paymeny Now
             </a> 
             <a href="#" class="waves-effect waves-light btn-large" style="background-color: red;">Cancellation Policy
             </a>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

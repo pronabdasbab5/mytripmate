@@ -740,50 +740,72 @@ class HolidaysController extends Controller
     /** Start of Package Hotel **/
     public function showUploadPHotelForm($packageId) 
     {
-        $photels        = New PHotels;
-        $photelsDetails = $photels->all();
+        $package_itenary = DB::table('package_itenary')
+            ->where('packageId', $packageId)
+            ->get();
+
+        $budget_hotels = DB::table('package_hotels')
+            ->where('hotelType', 1)
+            ->get();
+
+        $delux_hotels = DB::table('package_hotels')
+            ->where('hotelType', 2)
+            ->get();
+
+        $packageData = DB::table('package')
+            ->where('id', $packageId)
+            ->first();
 
         $package        = New Package;
         $packageDetails = $package->find($packageId);
 
-        return view('admin.auth.holidays.packages.new_package_hotel', ['packageId' => $packageId, 'packageTitle' => $packageDetails['packageTitle'], 'packageFakeId' => $packageDetails['packageId'], 'photelsData' => $photelsDetails, 'msg' => '']);
+        return view('admin.auth.holidays.packages.new_package_hotel', ['packageId' => $packageId, 'packageTitle' => $packageDetails['packageTitle'], 'packageFakeId' => $packageDetails['packageId'], 'package_itenary' => $package_itenary, 'budget_hotels' => $budget_hotels, 'delux_hotels' => $delux_hotels, 'msg' => '', 'packageData' => $packageData]);
     }
 
     public function uploadPHotel(Request $request, $packageId) 
     {
         $request->validate([
-            'hotel_id' => 'bail|required',
+            'itenary_id' => 'bail|required',
+            'budget_hotels' => 'required',
+            'delux_hotels' => 'required'
+
         ],
         [
-            'hotel_id.required' => 'The package included facility is required' 
+            'budget_hotels.required' => 'The Budget Hotels is required',
+            'delux_hotels.required' => 'The Delux Hotels is required'
         ]);
 
-        $phrelation = new PHRelation;
+        $count = DB::table('package_hotel_relation')
+            ->where('packageId', $packageId)
+            ->count();
 
-        foreach ($request->input('hotel_id') as $value) {
+        if ($count > 0) {
 
-            $phrelation_cnt = $phrelation->where('packageId', $packageId)
-                        ->where('hotelId', $value)
-                        ->count();
+            return redirect()->route('admin.upload_p_hotel_form', ['packageId' => $packageId])->with('msg', 'Hotel already addded');
+        } 
+        else {
 
-            if($phrelation_cnt == 0) {
+            for ($i = 0; $i < count($request->input('itenary_id')); $i++) {
 
-                $phrelation->insert([
-                    'packageId' => $packageId,
-                    'hotelId'   => $value,
-                    'created_at'=> now(),
-                    'updated_at'=> now()
-                ]);
+                DB::table('package_hotel_relation')
+                    ->insert([
+                        'packageId' => $packageId,
+                        'packageItenaryId'   => $request->input('itenary_id')[$i],
+                        'hotelType' => 1,
+                        'hotelId' => $request->input('budget_hotels')[$i]
+                    ]);
+
+                DB::table('package_hotel_relation')
+                    ->insert([
+                        'packageId' => $packageId,
+                        'packageItenaryId'   => $request->input('itenary_id')[$i],
+                        'hotelType' => 2,
+                        'hotelId' => $request->input('delux_hotels')[$i]
+                    ]);
             }
+
+            return redirect()->route('admin.upload_p_hotel_form', ['packageId' => $packageId])->with('msg', 'Hotel has been addded successfully');
         }
-
-        $photels        = New PHotels;
-        $photelsDetails = $photels->all();
-
-        $package        = New Package;
-        $packageDetails = $package->find($packageId);
-
-        return redirect()->route('admin.upload_p_hotel_form', ['packageId' => $packageId])->with('msg', 'Hotel has been addded successfully');
     }
     /** End of Package Hotel **/
 
@@ -801,6 +823,7 @@ class HolidaysController extends Controller
         $request->validate([
             'day'                 => 'bail|required',
             'title'               => 'required',
+            'location'            => 'required',
             'itenary_banner_file' => 'required',
             'itenary_desc'        => 'required',
             'total_day'           => 'required'
@@ -808,6 +831,7 @@ class HolidaysController extends Controller
         [
             'day.required'                 => 'The days is required',
             'title.required'               => 'The title is required',
+            'location.required'            => 'The location is required',
             'itenary_banner_file.required' => 'The banner is required', 
             'itenary_desc.required'        => 'The description is required', 
             'total_day.required'           => 'The total day is required', 
@@ -842,6 +866,7 @@ class HolidaysController extends Controller
                     'packageId' => $packageId,
                     'days'      => $request->input('day')[$i],
                     'title'     => ucwords(strtolower($request->input('title')[$i])),
+                    'location'  => $request->input('location')[$i],
                     'desc'      => $request->itenary_desc[$i],
                     'image'     => $file_name,
                     'created_at'=> now(),
@@ -1352,75 +1377,111 @@ class HolidaysController extends Controller
     }
 
     public function editPackageHotelForm($packageId) {
+    
+        $package_itenary = DB::table('package_itenary')
+            ->where('packageId', $packageId)
+            ->get();
 
-        $package     = new Package;
-        $packageData = $package->find($packageId);
-
-        $phrelation     = new PHRelation;
-        $phrelationData = $phrelation->where('packageId', $packageId)
-                            ->join('package_hotels', 'package_hotel_relation.hotelId', '=', 'package_hotels.id')
-                            ->select('package_hotel_relation.packageId', 'package_hotel_relation.hotelId', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotel_relation.status', 'package_hotels.price', 'package_hotels.id')
-                            ->get();
-
-        if (count($phrelationData) == 0) {
+        $package_hotels = [];
+        for ($i = 0; $i < count($package_itenary); $i++) {
             
-            $phrelation     = new PHotels;
-            $phrelationData = $phrelation->all();
+            $package_budget_hotels = DB::table('package_hotel_relation')
+                ->where('packageId', $packageId)
+                ->where('packageItenaryId', $package_itenary[$i]->id)
+                ->where('hotelType', 1)
+                ->first();
+
+            $package_delux_hotels = DB::table('package_hotel_relation')
+                ->where('packageId', $packageId)
+                ->where('packageItenaryId', $package_itenary[$i]->id)
+                ->where('hotelType', 2)
+                ->first();
+
+            if(!empty($package_budget_hotels)) {
+                $package_hotels[] = [
+                    'hotelBudgetId' => $package_budget_hotels->hotelId,
+                    'hotelDeluxId' => $package_delux_hotels->hotelId,
+                ];
+            }
         }
 
-        return view('admin.auth.holidays.packages.edit_package_hotel', ['phrelationData' => $phrelationData, 'packageData' => $packageData]);
+        $packageData = DB::table('package')
+            ->where('id', $packageId)
+            ->first();
+
+        $budget_hotels = DB::table('package_hotels')
+            ->where('hotelType', 1)
+            ->get();
+
+        $delux_hotels = DB::table('package_hotels')
+            ->where('hotelType', 2)
+            ->get();
+
+        return view('admin.auth.holidays.packages.edit_package_hotel', ['package_hotels' => $package_hotels, 'package_itenary' => $package_itenary, 'packageData' => $packageData, 'budget_hotels' => $budget_hotels, 'delux_hotels' => $delux_hotels]);
     }
 
     public function updatePackageHotels(Request $request, $packageId) 
     {  
-        $phrelation    = new PHRelation;
-        $phrelationCnt = $phrelation->where('packageId', $packageId)
-                                    ->count();
+        $request->validate([
+            'itenary_id' => 'required',
+            'budget_hotels' => 'required',
+            'delux_hotels' => 'required'
+        ]);
 
-        if ($phrelationCnt == 0) {
+        for ($i=0; $i < count($request->input('itenary_id')); $i++) { 
+            
+            $check_budget_hotel = DB::table('package_hotel_relation')
+                ->where('packageId', $packageId)
+                ->where('packageItenaryId', $request->input('itenary_id')[$i])
+                ->where('hotelType', 1)
+                ->count();
+
+            $check_delux_hotel = DB::table('package_hotel_relation')
+                ->where('packageId', $packageId)
+                ->where('packageItenaryId', $request->input('itenary_id')[$i])
+                ->where('hotelType', 2)
+                ->count();
+
+            if ($check_budget_hotel > 0) {
                 
-            for ($i=0; $i < count($request->input('hotel_hidden_id')); $i++) { 
-                
-                if (isset($request->input('hotel_id')[$i])){
-
-                    $phrelation->insert([
-                        'packageId' => $packageId,
-                        'hotelId'   => $request->input('hotel_hidden_id')[$i],
-                        'status'    => 1
+                DB::table('package_hotel_relation')
+                    ->where('packageId', $packageId)
+                    ->where('packageItenaryId', $request->input('itenary_id')[$i])
+                    ->where('hotelType', 1)
+                    ->update([
+                        'hotelId' => $request->input('budget_hotels')[$i]
                     ]);
-                }
-                else {
+            } else {
 
-                    $phrelation->insert([
+                DB::table('package_hotel_relation')
+                    ->insert([
                         'packageId' => $packageId,
-                        'hotelId'   => $request->input('hotel_hidden_id')[$i],
-                        'status'    => 0
+                        'packageItenaryId' => $request->input('itenary_id')[$i],
+                        'hotelType' => 1,
+                        'hotelId' => $request->input('budget_hotels')[$i]
                     ]);
-                }
             }
-        } else {
 
-            if($request->has('hotel_id')) {
-
-                for ($i=0; $i < $phrelationCnt; $i++) { 
+            if ($check_delux_hotel > 0) {
                 
-                    if (isset($request->input('hotel_id')[$i]))
-                        $phrelation->where('packageId', $packageId)
-                                    ->where('hotelId', $request->input('hotel_hidden_id')[$i])
-                                    ->update(['status' => 1]);
-                    else 
-                        $phrelation->where('packageId', $packageId)
-                                    ->where('hotelId', $request->input('hotel_hidden_id')[$i])
-                                    ->update(['status' => 0]);
-                }
+                DB::table('package_hotel_relation')
+                    ->where('packageId', $packageId)
+                    ->where('packageItenaryId', $request->input('itenary_id')[$i])
+                    ->where('hotelType', 2)
+                    ->update([
+                        'hotelId' => $request->input('delux_hotels')[$i]
+                    ]);
+            } else {
+
+                DB::table('package_hotel_relation')
+                    ->insert([
+                        'packageId' => $packageId,
+                        'packageItenaryId' => $request->input('itenary_id')[$i],
+                        'hotelType' => 2,
+                        'hotelId' => $request->input('delux_hotels')[$i]
+                    ]);
             }
         }
-
-        $photels        = New PHotels;
-        $photelsDetails = $photels->all();
-
-        $package        = New Package;
-        $packageDetails = $package->find($packageId);
 
         return redirect()->route('admin.edit_package_hotel_form', ['packageId' => $packageId])->with('msg', 'Hotel has been updated successfully');
     }
@@ -1459,6 +1520,7 @@ class HolidaysController extends Controller
         $request->validate([
             'title'           => 'bail|required',
             'itenary_desc'    => 'required',
+            'location'        => 'required',
             'old_itenary_img' => 'required',
             'itenary_id'      => 'required'
         ],
@@ -1501,6 +1563,7 @@ class HolidaysController extends Controller
                                         ->where('packageId', $packageId)
                                         ->update([
                                             'title'     => ucwords(strtolower($request->input('title')[$i])),
+                                            'location'  => $request->location[$i],
                                             'desc'      => $request->itenary_desc[$i],
                                             'updated_at'=> now(),
                                         ]);
@@ -1511,6 +1574,7 @@ class HolidaysController extends Controller
                                         ->where('packageId', $packageId)
                                         ->update([
                                             'title'     => ucwords(strtolower($request->input('title')[$i])),
+                                            'location'  => $request->location[$i],
                                             'desc'      => $request->itenary_desc[$i],
                                             'updated_at'=> now(),
                                         ]);
@@ -1534,6 +1598,7 @@ class HolidaysController extends Controller
                         'packageId' => $packageId,
                         'days'      => $request->input('day')[$i],
                         'title'     => ucwords(strtolower($request->input('title')[$i])),
+                        'location'  => $request->location[$i],
                         'desc'      => $request->itenary_desc[$i],
                         'image'     => $file_name,
                         'created_at'=> now(),
@@ -1563,6 +1628,7 @@ class HolidaysController extends Controller
                     'packageId' => $packageId,
                     'days'      => $request->input('day')[$i],
                     'title'     => ucwords(strtolower($request->input('title')[$i])),
+                    'location'  => $request->location[$i],
                     'desc'      => $request->itenary_desc[$i],
                     'image'     => $file_name,
                     'created_at'=> now(),
@@ -1609,11 +1675,8 @@ class HolidaysController extends Controller
                             5 => 'pacakgeTitle',
                             6 => 'duration',
                             7 => 'location',
-                            8 => 'hotelType',
-                            9 => 'hotelName',
-                            10=> 'hotelAddress',
-                            11=> 'price',
-                            12=> 'action'
+                            8=> 'price',
+                            9=> 'action'
                         );
 
         $totalData = $packageBooking
@@ -1633,8 +1696,7 @@ class HolidaysController extends Controller
                             ->where('package_booking_basic_details.status', $request->input('status'))
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                            ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->offset($start)
                             ->limit($limit)
                             ->orderBy('package_booking_basic_details.'.$order,$dir)
@@ -1648,8 +1710,7 @@ class HolidaysController extends Controller
                             ->where('package_booking_basic_details.status', $request->input('status'))
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                            ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->where('package_booking_basic_details.txtNo', 'LIKE',"%{$search}%")
                             ->orWhere('package_booking_basic_details.startDate', 'LIKE',"%{$search}%")
                             ->orWhere('users.name', 'LIKE',"%{$search}%")
@@ -1657,8 +1718,6 @@ class HolidaysController extends Controller
                             ->orWhere('package.packageTitle', 'LIKE',"%{$search}%")
                             ->orWhere('package.duration', 'LIKE',"%{$search}%")
                             ->orWhere('package.location', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelName', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.price', 'LIKE',"%{$search}%")
                             ->offset($start)
                             ->limit($limit)
                             ->orderBy('package_booking_basic_details.'.$order,$dir)
@@ -1668,8 +1727,7 @@ class HolidaysController extends Controller
                             ->where('package_booking_basic_details.status', $request->input('status'))
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                            ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->where('package_booking_basic_details.txtNo', 'LIKE',"%{$search}%")
                             ->orWhere('package_booking_basic_details.startDate', 'LIKE',"%{$search}%")
                             ->orWhere('users.name', 'LIKE',"%{$search}%")
@@ -1677,9 +1735,6 @@ class HolidaysController extends Controller
                             ->orWhere('package.packageTitle', 'LIKE',"%{$search}%")
                             ->orWhere('package.duration', 'LIKE',"%{$search}%")
                             ->orWhere('package.location', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelName', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelAddress', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.price', 'LIKE',"%{$search}%")
                             ->count();
         }
 
@@ -1722,11 +1777,6 @@ class HolidaysController extends Controller
                 //     $action = "Booking has been cancelled";
                 // }
 
-                if ($single_data->hotelType == 1) 
-                    $hotelType = "Budget";
-                else
-                    $hotelType = "Delux";
-
                 $nestedData['id']            = "<b>".$cnt."<b>";
                 $nestedData['transactionNo'] = "<b>".$single_data->txtNo."<b>";
                 $nestedData['userName']      = "<b>".$single_data->name."<b>";
@@ -1735,9 +1785,6 @@ class HolidaysController extends Controller
                 $nestedData['pacakgeTitle']  = "<p id=\"package_id$cnt\" hidden>$single_data->packageId</p><a onclick=\"show_package_detail($cnt)\" title=\"Click Me View Details\"><b>".$single_data->packageTitle."<b></a>";
                 $nestedData['duration']      = "<b>".$single_data->duration."<b>";
                 $nestedData['location']      = "<b>".$single_data->location."<b>";
-                $nestedData['hotelType']     = "<b>".$hotelType."<b>";
-                $nestedData['hotelName']     = "<b>".$single_data->hotelName."<b>";
-                $nestedData['hotelAddress']  = "<b>".$single_data->hotelAddress."<b>";
                 $nestedData['price']         = "<b>".$single_data->payableAmount."<b>";
                 $nestedData['action']        = "<b>".$action."<b>";
 
@@ -1770,11 +1817,8 @@ class HolidaysController extends Controller
                             5 => 'pacakgeTitle',
                             6 => 'duration',
                             7 => 'location',
-                            8 => 'hotelType',
-                            9 => 'hotelName',
-                            10=> 'hotelAddress',
-                            11=> 'price',
-                            12=> 'action'
+                            8 => 'price',
+                            9 => 'action'
                         );
 
         $totalData = $packageBooking->count();
@@ -1791,8 +1835,7 @@ class HolidaysController extends Controller
             $booking_data = DB::table('package_booking_basic_details')
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                            ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->offset($start)
                             ->limit($limit)
                             ->orderBy('package_booking_basic_details.'.$order,$dir)
@@ -1805,17 +1848,13 @@ class HolidaysController extends Controller
             $booking_data = DB::table('package_booking_basic_details')
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                            ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->where('package_booking_basic_details.txtNo', 'LIKE',"%{$search}%")
                             ->orWhere('package_booking_basic_details.startDate', 'LIKE',"%{$search}%")
                             ->orWhere('users.name', 'LIKE',"%{$search}%")
                             ->orWhere('users.email', 'LIKE',"%{$search}%")
                             ->orWhere('package.packageTitle', 'LIKE',"%{$search}%")
                             ->orWhere('package.duration', 'LIKE',"%{$search}%")
-                            ->orWhere('package.location', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelName', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.price', 'LIKE',"%{$search}%")
                             ->offset($start)
                             ->limit($limit)
                             ->orderBy('package_booking_basic_details.'.$order,$dir)
@@ -1825,7 +1864,7 @@ class HolidaysController extends Controller
                             ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                             ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
                             ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
-                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.price', 'package_hotels.hotelAddress')
+                            ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.packageTitle', 'package.duration', 'package.location')
                             ->where('package_booking_basic_details.txtNo', 'LIKE',"%{$search}%")
                             ->orWhere('package_booking_basic_details.startDate', 'LIKE',"%{$search}%")
                             ->orWhere('users.name', 'LIKE',"%{$search}%")
@@ -1833,9 +1872,6 @@ class HolidaysController extends Controller
                             ->orWhere('package.packageTitle', 'LIKE',"%{$search}%")
                             ->orWhere('package.duration', 'LIKE',"%{$search}%")
                             ->orWhere('package.location', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelName', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.hotelAddress', 'LIKE',"%{$search}%")
-                            ->orWhere('package_hotels.price', 'LIKE',"%{$search}%")
                             ->count();
         }
 
@@ -1849,11 +1885,6 @@ class HolidaysController extends Controller
 
                 $action = "<a class=\"btn btn-primary form-text-element\" href=\"".route('admin.p_booking_invoice', ['bookingId' => $single_data->id])."\" target=\"_blank\">View Booking</a>";
 
-                if ($single_data->hotelType == 1) 
-                    $hotelType = "Budget";
-                else
-                    $hotelType = "Delux";
-
                 $nestedData['id']            = "<b>".$cnt."<b>";
                 $nestedData['transactionNo'] = "<b>".$single_data->txtNo."<b>";
                 $nestedData['userName']      = "<b>".$single_data->name."<b>";
@@ -1862,10 +1893,6 @@ class HolidaysController extends Controller
                 $nestedData['pacakgeTitle']  = "<p id=\"package_id$cnt\" hidden>$single_data->packageId</p><a onclick=\"show_package_detail($cnt)\" title=\"Click Me View Details\"><b>".$single_data->packageTitle."<b></a>";
                 $nestedData['duration']      = "<b>".$single_data->duration."<b>";
                 $nestedData['location']      = "<b>".$single_data->location."<b>";
-                $nestedData['hotelType']     = "<b>".$hotelType."<b>";
-                $nestedData['hotelName']     = "<b>".$single_data->hotelName."<b>";
-                $nestedData['hotelAddress']  = "<b>".$single_data->hotelAddress."<b>";
-                $nestedData['price']         = "<b>".$single_data->price."<b>";
                 $nestedData['action']        = "<b>".$action."<b>";
 
                 $data[] = $nestedData;
@@ -1900,9 +1927,8 @@ class HolidaysController extends Controller
         $pbbdetailsData = $pbbdetails->where('package_booking_basic_details.id', $bookingId)
                                     ->join('users', 'package_booking_basic_details.userId', '=', 'users.id')
                                     ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                                    ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
                                     ->leftJoin('package_coupon', 'package_booking_basic_details.couponId', '=', 'package_coupon.id')
-                                    ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.id as p_id', 'package.packageId', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package_hotels.hotelType', 'package_hotels.hotelName', 'package_hotels.hotelAddress', 'package_hotels.price as h_price', 'package_coupon.flatAmount')
+                                    ->select('package_booking_basic_details.*', 'users.name', 'users.email', 'package.id as p_id', 'package.packageId', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package_coupon.flatAmount')
                                     ->get();
 
         $pbtdetailsData = $pbtdetails->where('pbbdId', $bookingId)
@@ -1913,13 +1939,28 @@ class HolidaysController extends Controller
                 ->where('totalPersons', $pbbdetailsData[0]->totalPersons)
                 ->get();
 
-        return view('admin.auth.holidays.booking.package_booking_invoice', ['pbbdetailsData' => $pbbdetailsData, 'pbtdetailsData' => $pbtdetailsData, 'packagePrice' => $packagePrice]);
+        $package_hotels = DB::table('package_hotel_booking')
+            ->leftJoin('package_hotels', 'package_hotel_booking.hotelId', '=', 'package_hotels.id')
+            ->where('package_hotel_booking.bookingId', $bookingId)
+            ->select('package_hotels.*')
+            ->get();
+
+        return view('admin.auth.holidays.booking.package_booking_invoice', ['pbbdetailsData' => $pbbdetailsData, 'pbtdetailsData' => $pbtdetailsData, 'packagePrice' => $packagePrice, 'package_hotels' => $package_hotels]);
     }
 
     public function packageBookingPayment ($bookingId, $status) {
-        $pbbdetails = new PBBDetails;
-        $pbbdetails->where('id', $bookingId)
-                    ->update(['paymentStatus' => 1]);
+
+        $booking_detail = DB::table('package_booking_basic_details')
+            ->where('id', $bookingId)
+            ->first();
+
+        DB::table('package_booking_basic_details')
+            ->where('id', $bookingId)
+            ->update([
+                'paid_amount' => $booking_detail->payableAmount,
+                'remaining_amount' => 0,
+                'paymentStatus' => 1
+            ]);
 
         return redirect()->route('admin.p_booking', ['status' => $status]);
     }

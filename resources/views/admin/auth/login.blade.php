@@ -8,7 +8,7 @@
                     <strong>Invalid Authentication</strong>
                 @enderror
               <div>
-                <input type="email" class="form-control form-text-element" placeholder="Enter Your Email" name="email" required autofocus/>
+                <input type="email" class="form-control form-text-element" placeholder="Enter Your Email" name="email" value="{{ old('email') }}" required autofocus/>
               </div>
               <div>
                 <input id="password" type="password" class="form-control form-text-element" placeholder="Enter Your Password" name="password" required/>

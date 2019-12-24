@@ -40,11 +40,19 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('travel_bookings/{user_id}', 'AccountController@travelBookings')->name('travel_bookings');
 		Route::get('change_password/{user_id}', 'AccountController@changePassword')->name('change_password');
 		Route::post('password_set/{user_id}', 'AccountController@setPassword')->name('password_set');
+
+		Route::post('pay-pending', 'AccountController@payPending')->name('pay_pending');
+		Route::get('pending-pay-success/{booking_id}', 'AccountController@paySuccess');
+		Route::get('pending-thankyou', 'AccountController@thankyou')->name('pending_thankyou');
+		Route::get('pening-payment-failed', 'AccountController@paymentFailed')->name('pening_payment_failed');
 	});
 
 	Route::namespace('Package')->group(function () {
 		Route::get('package_booking_form', 'PackageController@package_booking_form')->name('package_booking_form');
 		Route::post('package_booking', 'PackageController@package_booking')->name('package_booking');
+		Route::get('pay-success/{booking_id}', 'PackageController@paySuccess');
+		Route::get('thankyou/{txtNo}', 'PackageController@thankyou')->name('thankyou');
+		Route::get('payment-failed', 'PackageController@paymentFailed')->name('payment_failed');
 	});
 });
 

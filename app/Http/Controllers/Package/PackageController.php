@@ -121,12 +121,12 @@ class PackageController extends Controller
 
         $packageData = $package->where('package.id', $packageId)
                                 ->join('package_type', 'package.packageType', '=', 'package_type.id')
-                                ->select('package_type.packageType', 'package.id', 'package.location', 'package.packageId', 'package.duration', 'package.rating', 'package.packageDesc', 'package.offer', 'package.includeFacility', 'package.excludeFacility', 'package.termCondition', 'package.longitude', 'package.latitude')
+                                ->select('package_type.packageType', 'package.id', 'package.location', 'package.packageId', 'package.duration', 'package.rating', 'package.packageDesc', 'package.offer', 'package.includeFacility', 'package.excludeFacility', 'package.termCondition', 'package.longitude', 'package.latitude', 'package.totalDays')
                                 ->get();
                             
         $package_price = DB::table('package_price')
                             ->where('packageId', $packageId)
-                            ->orderBy('totalPersons', 'DESC')
+                            ->orderBy('totalPersons', 'ASC')
                             ->first();
 
         $photelsBudgetData = $phrelation->where('package_hotel_relation.packageId', $packageId)
@@ -189,7 +189,12 @@ class PackageController extends Controller
             ];
         }
 
-        return view('package.package_details', ['packageData' => $packageData, 'package_price' => $package_price->amount, 'photelsBudgetData' => $photelsBudgetData, 'photelsDeluxData' => $photelsDeluxData, 'itenaryData' => $data, 'sliderData' => $pidata, 'popularPackageData' => $ppdata]);
+        $total_persons_list = DB::table('package_price')
+                            ->where('packageId', $packageId)                 
+                            ->orderBy('totalPersons', 'ASC')
+                            ->get();
+
+        return view('package.package_details', ['packageData' => $packageData, 'package_price' => $package_price->amount, 'photelsBudgetData' => $photelsBudgetData, 'photelsDeluxData' => $photelsDeluxData, 'itenaryData' => $data, 'sliderData' => $pidata, 'popularPackageData' => $ppdata, 'total_persons_list' => $total_persons_list, 'min_person' => $package_price->totalPersons]);
     }
 
     public function itenaryImages ($file_name) {
@@ -246,33 +251,30 @@ class PackageController extends Controller
     }
 
     public function package_booking_form (Request $request) {
+
         $package     = new Package;
-        $photels     = new PHotels;
+        // $photels     = new PHotels;
         $pcoupon     = new PCoupon;
         $packageData = $package->find($request->package_id);
-        $photelsData = $photels->find($request->hotel_id);
+        // $photelsData = $photels->find($request->hotel_id);
         $pcouponData = $pcoupon->all();
 
         if($request->has('total_persons_list')){
             $package_price = DB::table('package_price')
                             ->where('packageId', $request->package_id)
-                            ->where('totalPersons', $request->total_persons_list)
-                            ->orderBy('totalPersons', 'DESC')
-                            ->first();
-        } else {
-            $package_price = DB::table('package_price')
-                            ->where('packageId', $request->package_id)
-                            ->orderBy('totalPersons', 'DESC')
+                            ->where('totalPersons', $request->input('total_persons_list'))
                             ->first();
         }
+        // } else {
+        //     $package_price = DB::table('package_price')
+        //                     ->where('packageId', $request->package_id)
+        //                     ->orderBy('totalPersons', 'DESC')
+        //                     ->first();
+        // }
         
-        $total_persons_list = DB::table('package_price')
-                            ->where('packageId', $request->package_id)                 
-                            ->orderBy('totalPersons', 'ASC')
-                            ->get();
         $pdata = [
             'packageId'    => $request->input('package_id'),
-            'adults'       => $package_price->totalPersons,
+            'adults'       => $request->input('total_persons_list'),
             'location'     => $packageData->location,
             'packagePrice' => $package_price->amount,
             'offer'        => $packageData->offer,
@@ -282,13 +284,13 @@ class PackageController extends Controller
             'totalNights'  => $packageData->totalNights
         ];
 
-        $phdata = [
-            'hotelId'    => $request->hotel_id,
-            'hotelPrice' => $photelsData->price,
-        ];
+        // $phdata = [
+            // 'hotelId'    => $request->hotel_id,
+            // 'hotelPrice' => $photelsData->price,
+        // ];
 
         // if (Auth::check()) 
-            return view('package.package_booking', ['packageData' => $pdata, 'photelsData' => $phdata, 'total_persons_list' => $total_persons_list]);
+            return view('package.package_booking', ['packageData' => $pdata, 'hotel_type' => $request->input('hotel_type'), 'start_date' => $request->input('start_date_text'), 'end_date' => $request->input('end_date_text')]);
         // else 
             // return redirect()->route('login');
     }
@@ -297,10 +299,10 @@ class PackageController extends Controller
 
         $package = new Package;
         $pcoupon = new PCoupon;
-        $photels = new PHotels;
+        // $photels = new PHotels;
 
         $packageData = $package->find($request->input('packageId'));
-        $photelsData = $photels->find($request->input('hotelId'));
+        // $photelsData = $photels->find($request->input('hotelId'));
         $pcouponData = $pcoupon->all();
 
         $packagePrice = DB::table('package_price')
@@ -312,10 +314,10 @@ class PackageController extends Controller
         if(!empty($packageData->offer)) {
             $discount      = ($packagePrice[0]->amount * $packageData->offer) / 100;
             $selling_price = ($packagePrice[0]->amount - $discount);
-            $selling_price = $selling_price + $photelsData->price;
+            $selling_price = $selling_price;
         }
         else {
-            $selling_price = $packagePrice[0]->amount + $photelsData->price;
+            $selling_price = $packagePrice[0]->amount;
         }
         /** End of Selling Price **/
 
@@ -343,6 +345,20 @@ class PackageController extends Controller
 
     public function package_booking (Request $request) {
 
+        // $request->validate([
+        //     'start_date' => 'required',
+        //     'total_persons' => 'required',
+        //     'payableAmount' => 'required',
+        //     'packageId' => 'required',
+        //     'couponId' => 'required',
+        //     'payment_radio' => 'required',
+        //     'hotel_type' => 'required',
+        //     'gender' => 'required',
+        //     'paid_amount' => 'required',
+        // ]);
+
+        // dd($request);
+
         $pbbdetails = new PBBDetails;
         $txtNo      = uniqid('txt');
 
@@ -352,9 +368,13 @@ class PackageController extends Controller
         $pbbdetails->totalPersons = $request->input('total_persons');
         $pbbdetails->payableAmount = $request->input('payableAmount');
         $pbbdetails->packageId   = $request->input('packageId');
-        $pbbdetails->hotelId     = $request->input('hotelId');
         $pbbdetails->couponId    = $request->input('couponId');
         $pbbdetails->paymentType = $request->input('payment_radio');
+
+        $package_hotels = DB::table('package_hotel_relation')
+            ->where('packageId', $request->input('packageId'))
+            ->where('hotelType', $request->input('hotel_type'))
+            ->get();
 
         if($pbbdetails->save()) {
 
@@ -370,8 +390,143 @@ class PackageController extends Controller
                     'created_at'=> now()
                 ]);
             }
-        }
 
+            foreach ($package_hotels as $key => $item) {
+                DB::table('package_hotel_booking')
+                    ->insert([
+                        'bookingId' => $pbbdetails->id,
+                        'packageId' => $request->input('packageId'),
+                        'hotelType' => $request->input('hotel_type'),
+                        'hotelId'   => $item->hotelId
+                    ]);
+            }
+
+            $user_detail = DB::table('users')
+                ->where('id', Auth::id())
+                ->first();
+
+            /** Payment Section **/
+             $api = new \Instamojo\Instamojo(
+                    config('services.instamojo.api_key'),
+                    config('services.instamojo.auth_token'),
+                    config('services.instamojo.url')
+                ); 
+            try {
+               $response = $api->paymentRequestCreate(array(
+                   "purpose" => "Payment",
+                   "amount" => $request->input('paid_amount'),
+                   "buyer_name" => $user_detail->name,
+                   "send_email" => true,
+                   "email" => $user_detail->email,
+                   "phone" => $user_detail->mobile_no,
+                   "redirect_url" => "http://127.0.0.1:8000/pay-success/".$pbbdetails->id,
+                ));
+
+                   DB::table('package_booking_basic_details')
+                        ->where('id', $pbbdetails->id)
+                        ->update([
+                            'paid_amount' => $request->input('paid_amount'),
+                            'payment_request_id' => $response['id'],
+                            'paymentStatus' => 2,
+                        ]);
+                    
+                   header('Location: ' . $response['longurl']);
+                   exit();
+            }catch (Exception $e) {
+               print('Error: ' . $e->getMessage());
+            } 
+        }
+    }
+
+    public function paySuccess(Request $request, $booking_id) {
+
+        try {
+    
+           $api = new \Instamojo\Instamojo(
+               config('services.instamojo.api_key'),
+               config('services.instamojo.auth_token'),
+               config('services.instamojo.url')
+           );
+    
+           $response = $api->paymentRequestStatus(request('payment_request_id'));
+    
+           if( !isset($response['payments'][0]['status']) ) {
+
+                DB::table('package_booking_basic_details')
+                    ->where('id', $booking_id)
+                    ->delete();
+
+                DB::table('package_booking_traveller_details')
+                    ->where('pbbdId', $booking_id)
+                    ->delete();
+
+                return redirect()->route('payment_failed');
+           } else if($response['payments'][0]['status'] != 'Credit') {
+
+                DB::table('package_booking_basic_details')
+                    ->where('id', $booking_id)
+                    ->delete();
+
+                DB::table('package_booking_traveller_details')
+                    ->where('pbbdId', $booking_id)
+                    ->delete();
+
+                return redirect()->route('payment_failed');
+           } 
+         }catch (\Exception $e) {
+
+            DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->delete();
+
+            DB::table('package_booking_traveller_details')
+                ->where('pbbdId', $booking_id)
+                ->delete();
+
+            return redirect()->route('payment_failed');
+        }
+       
+        if($response['payments'][0]['status'] == 'Credit') {
+
+            $user_id = Auth::id();
+            
+            $user_detail = DB::table('users')
+                ->where('id', $user_id)
+                ->first();
+
+            $package_booking_detail = DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->first();
+
+            $remaining_amount = $package_booking_detail->payableAmount - $package_booking_detail->paid_amount;
+
+            if ($remaining_amount > 0) {
+                $remaining_amount = $remaining_amount;
+                $paymentStatus = 0;
+            } else {
+                $remaining_amount = 0;
+                $paymentStatus = 1;
+            }
+
+            DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->update([
+                    'payment_id' => $response['payments'][0]['payment_id'],
+                    'remaining_amount' => $remaining_amount,
+                    'paymentStatus' => $paymentStatus
+                ]);
+        } 
+
+        return redirect()->route('thankyou', ['txtNo' => $package_booking_detail->txtNo]);
+    }
+
+    public function paymentFailed()
+    {
+        return view('package.package_failed');
+    }
+
+    public function thankyou($txtNo)
+    {
         return view('package.package_thank_you', ['txtNo' => $txtNo]);
     }
 

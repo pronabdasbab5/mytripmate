@@ -21,6 +21,7 @@ use File;
 use Illuminate\Support\Facades\Hash;
 use Response;
 use DB;
+use Auth;
 
 class AccountController extends Controller
 {
@@ -29,9 +30,8 @@ class AccountController extends Controller
         $pbtdetails     = new PBTDetails;
         $pbbdetailsData = $pbbdetails->where('package_booking_basic_details.userId', $user_id)
                                     ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                                    ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
                                     ->leftJoin('package_coupon', 'package_booking_basic_details.couponId', '=', 'package_coupon.id')
-                                    ->select('package_booking_basic_details.id', 'package_booking_basic_details.userId', 'package_booking_basic_details.packageId', 'package_booking_basic_details.payableAmount', 'package_booking_basic_details.paymentStatus', 'package_booking_basic_details.startDate', 'package.packageTitle', 'package.offer', 'package.duration', 'package_hotels.price as h_price', 'package_coupon.flatAmount')
+                                    ->select('package_booking_basic_details.*', 'package.packageTitle', 'package.offer', 'package.duration', 'package_coupon.flatAmount')
                                     ->orderBy('package_booking_basic_details.id', 'DESC')
                                     ->first();
 
@@ -47,7 +47,7 @@ class AccountController extends Controller
                                     ->distinct()
                                     ->get();
         /** End of Search Location **/
-
+        
     	return view('account.myaccount', ['pbbdetailsData' => $pbbdetailsData, 'packageDurationData' => $packageDurationData, 'packageLocationData' => $packageLocationData]);
     }
 
@@ -57,9 +57,8 @@ class AccountController extends Controller
         $pbbdetailsData = $pbbdetails->where('package_booking_basic_details.userId', $user_id)
                                     ->where('package_booking_basic_details.id', $booking_id)
                                     ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                                    ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
                                     ->leftJoin('package_coupon', 'package_booking_basic_details.couponId', '=', 'package_coupon.id')
-                                    ->select('package_booking_basic_details.id', 'package_booking_basic_details.userId', 'package_booking_basic_details.totalPersons', 'package_booking_basic_details.payableAmount', 'package_booking_basic_details.packageId', 'package_booking_basic_details.paymentStatus', 'package_booking_basic_details.startDate', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package.totalDays', 'package_hotels.price as h_price', 'package_coupon.flatAmount')
+                                    ->select('package_booking_basic_details.*', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package.totalDays', 'package_coupon.flatAmount')
                                     ->orderBy('package_booking_basic_details.id', 'DESC')
                                     ->get();
 
@@ -84,9 +83,8 @@ class AccountController extends Controller
         $pbtdetails     = new PBTDetails;
         $pbbdetailsData = $pbbdetails->where('package_booking_basic_details.userId', $user_id)
                                     ->join('package', 'package_booking_basic_details.packageId', '=', 'package.id')
-                                    ->join('package_hotels', 'package_booking_basic_details.hotelId', '=', 'package_hotels.id')
                                     ->leftJoin('package_coupon', 'package_booking_basic_details.couponId', '=', 'package_coupon.id')
-                                    ->select('package_booking_basic_details.id', 'package_booking_basic_details.userId', 'package_booking_basic_details.payableAmount', 'package_booking_basic_details.packageId', 'package_booking_basic_details.paymentStatus', 'package_booking_basic_details.startDate', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package.totalDays', 'package_hotels.price as h_price', 'package_coupon.flatAmount')
+                                    ->select('package_booking_basic_details.*', 'package.packageTitle', 'package.offer', 'package.duration', 'package.location', 'package.totalDays', 'package_coupon.flatAmount')
                                     ->orderBy('package_booking_basic_details.id', 'DESC')
                                     ->get();
 
@@ -143,5 +141,123 @@ class AccountController extends Controller
             ->update(['password' => Hash::make($request->input('password'))]);
 
         return redirect()->route('change_password', ['user_id' => $user_id])->with('msg', 'Password has been changed');       
+    }
+
+    public function payPending (Request $request) {
+
+        $request->validate([
+            'amount' => 'required',
+            'booking_id' => 'required',
+        ]);
+
+        try {
+            $booking_id = decrypt($request->booking_id);
+        }catch(DecryptException $e) {
+            return redirect()->back();
+        }
+
+        $user_detail = DB::table('users')
+                ->where('id', Auth::id())
+                ->first();
+
+        $booking_detail = DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->first();
+
+            /** Payment Section **/
+             $api = new \Instamojo\Instamojo(
+                    config('services.instamojo.api_key'),
+                    config('services.instamojo.auth_token'),
+                    config('services.instamojo.url')
+                ); 
+            try {
+               $response = $api->paymentRequestCreate(array(
+                   "purpose" => "Payment",
+                   "amount" => $request->input('amount'),
+                   "buyer_name" => $user_detail->name,
+                   "send_email" => true,
+                   "email" => $user_detail->email,
+                   "phone" => $user_detail->mobile_no,
+                   "redirect_url" => "http://127.0.0.1:8000/pending-pay-success/".$booking_id,
+                ));
+
+                   DB::table('package_booking_basic_details')
+                        ->where('id', $booking_id)
+                        ->update([
+                            'paid_amount' => ($booking_detail->paid_amount + $request->input('amount')),
+                            'payment_request_id' => $response['id'],
+                            'paymentStatus' => 2,
+                        ]);
+                    
+                   header('Location: ' . $response['longurl']);
+                   exit();
+            }catch (Exception $e) {
+               print('Error: ' . $e->getMessage());
+            } 
+    }
+
+    public function paySuccess(Request $request, $booking_id) {
+
+        try {
+    
+           $api = new \Instamojo\Instamojo(
+               config('services.instamojo.api_key'),
+               config('services.instamojo.auth_token'),
+               config('services.instamojo.url')
+           );
+    
+           $response = $api->paymentRequestStatus(request('payment_request_id'));
+    
+           if( !isset($response['payments'][0]['status']) ) {
+                return redirect()->route('pening_payment_failed');
+           } else if($response['payments'][0]['status'] != 'Credit') {
+                return redirect()->route('pening_payment_failed');
+           } 
+         }catch (\Exception $e) {
+            return redirect()->route('pening_payment_failed');
+        }
+       
+        if($response['payments'][0]['status'] == 'Credit') {
+
+            $user_id = Auth::id();
+            
+            $user_detail = DB::table('users')
+                ->where('id', $user_id)
+                ->first();
+
+            $package_booking_detail = DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->first();
+
+            $remaining_amount = $package_booking_detail->payableAmount - $package_booking_detail->paid_amount;
+
+            if ($remaining_amount > 0) {
+                $remaining_amount = $remaining_amount;
+                $paymentStatus = 0;
+            } else {
+                $remaining_amount = 0;
+                $paymentStatus = 1;
+            }
+
+            DB::table('package_booking_basic_details')
+                ->where('id', $booking_id)
+                ->update([
+                    'payment_id' => $response['payments'][0]['payment_id'],
+                    'remaining_amount' => $remaining_amount,
+                    'paymentStatus' => $paymentStatus
+                ]);
+        } 
+
+        return redirect()->route('pending_thankyou');
+    }
+
+    public function paymentFailed()
+    {
+        return view('account.payment.payment_failed');
+    }
+
+    public function thankyou()
+    {
+        return view('account.payment.thank_you');
     }
 }

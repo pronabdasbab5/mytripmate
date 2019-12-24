@@ -18,6 +18,7 @@ class CreatePackageItenaryTable extends Migration
             $table->integer('packageId');
             $table->integer('days');
             $table->string('title', 191);
+            $table->string('location', 191);
             $table->text('desc');
             $table->string('image', 191);
             $table->timestamps();

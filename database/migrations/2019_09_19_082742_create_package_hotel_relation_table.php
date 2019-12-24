@@ -16,6 +16,8 @@ class CreatePackageHotelRelationTable extends Migration
         Schema::create('package_hotel_relation', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('packageId');
+            $table->integer('packageItenaryId')
+            $table->integer('hotelType')->comment('1 = Budget, 2 = Delux');
             $table->integer('hotelId');
             $table->integer('status')->default(1)->comment('1 = Active, 2 = De-Active');
             $table->timestamps();

@@ -64,23 +64,45 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                          <b>Hotel Type:</b> 
-                          @php
-                          	if ($pbbdetailsData[0]->hotelType == 1) 
-                          		print "Budget";
-                          	else
-                          		print "Delux"
-                          @endphp
-                          <br>
-                          <b>Hotel Name:</b> {{ $pbbdetailsData[0]->hotelName }}
-                          <br>
-                          <b>Hotel Address:</b> {!! $pbbdetailsData[0]->hotelAddress !!}
-                          <br>
-                          <b>Price:</b> {{ $pbbdetailsData[0]->h_price }}
                         </div>
                         <!-- /.col -->
                       </div>
                       <!-- /.row -->
+
+                      @if(count($package_hotels) > 0)
+                      <!-- Table row -->
+                      <div class="row">
+                        <div class="col-xs-12 table">
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Sl No</th>
+                                <th>Hotel Type</th>
+                                <th>Hotel Name</th>
+                                <th>Address</th>
+                                <th>Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                $cnt = 1;
+                                @endphp
+                                @foreach($package_hotels as $key => $item)
+                                  <tr>
+                                    <td>{{ $cnt++ }}</td>
+                                    <td>{{ $item->hotelType }}</td>
+                                    <td>{{ $item->hotelName }}</td>
+                                    <td>{!! $item->hotelAddress !!}</td>
+                                    <td>{{ $item->price }}</td>
+                                  </tr>
+                                 @endforeach
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- /.col -->
+                      </div>
+                      <!-- /.row -->
+                      @endif
 
                       @if(count($pbtdetailsData) > 0)
                       <!-- Table row -->

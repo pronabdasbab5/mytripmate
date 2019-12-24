@@ -37,6 +37,16 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label col-md-2 col-sm-2 col-xs-12 form-text-element">Location : <span class="required">*</span></label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                              <input type="text" name="location[]" class="form-control col-md-7 col-xs-12 form-text-element" required>
+                              @error('location')
+                                    {{ $message }}
+                                @enderror
+                            </div>
+                        </div>
+
                          <div class="form-group">
                             <label class="control-label col-md-2 col-sm-2 col-xs-12 form-text-element">Itenary Banner Image : <span class="required">*</span></label>
                             <div class="col-md-8 col-sm-8 col-xs-12">

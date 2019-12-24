@@ -27,18 +27,17 @@
           </h5> -->
           <br>
           <div class="col-md-12 holiday_pack_date" style="margin-bottom: 10px;">
-            <div class="col-md-2">
-                Trip Duration 
-            </div>
-            
             <div class="col-md-2 holiday_pack_date1 ">
-              <input id="datepicker" value="" placeholder="Start Date" required style="margin-top: 8px;height: 25px;">
+              {{ $start_date }}
             </div>
             <div class="col-md-3">
-               -  <input id="end_date" value="" placeholder="End Date" required style="width: 90%;margin-top: -4px;border: none;">
+               -  {{ $end_date }}
             </div>
             <div class="col-md-2">
-                  {{ $packageData['totalDays'] }}D / {{ $packageData['totalNights'] }}N
+                Trip Duration:  
+            </div>
+            <div class="col-md-2">
+                {{ $packageData['totalDays'] }}D / {{ $packageData['totalNights'] }}N
             </div>
             <div class="col-md-3">
                (Child upto 5 Yrs Free)
@@ -46,10 +45,6 @@
           </div>
          
           <div class="row">
-            <form method="GET" autocomplete="off" action="{{ route('package_booking_form') }}">
-              @csrf
-              <input type="hidden" name="package_id" value="{{ $packageData['packageId'] }}">
-              <input type="hidden" name="hotel_id" value="{{ $photelsData['hotelId'] }}">
                 <div class="col-md-3 col-sm-3" style="margin-top: 5px; padding-left:8px">
                     Number of Persons : 
                 </div>
@@ -57,25 +52,8 @@
                     {{ $packageData['adults'] }}
                 </div>
                 <div class="col-md-2 col-sm-2">
-                    <select name="total_persons_list" id="total_persons_list" required>
-                        @if(count($total_persons_list) > 0)
-                            @foreach($total_persons_list as $key => $value)
-                              @if ($value->totalPersons == $packageData['adults'])
-                                <option value="{{ $value->totalPersons }}" selected>{{ $value->totalPersons }}</option>
-                              @else
-                                <option value="{{ $value->totalPersons }}">{{ $value->totalPersons }}</option>
-                              @endif
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                   <button type="submit" name="submit" class="btn btn-success">Submit</button>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                    <a href="{{ route('packages') }}" class="btn btn-primary">Modify Trip</a>
+                    <a href="{{ route('package_details', ['packageId' => $packageData['packageId']]) }}" class="btn btn-primary">Modify Trip</a>
                  </div>
-            </form>
           </div>
           
           <h5 class="holiday_inclusions">Inclusions:
@@ -94,10 +72,10 @@
           <div>
               <form method="POST" action="{{ route('package_booking') }}" autocomplete="off">
                   @csrf
-              <input type="hidden" name="start_date" id="start_date" required>
-              <input type="hidden" name="total_persons" value="{{ $packageData['adults'] }}">
+              <input type="hidden" name="start_date" value="{{ $start_date }}" required>
+              <input type="hidden" name="total_persons" id="total_persons" value="{{ $packageData['adults'] }}">
             <input type="hidden" name="packageId" value="{{ $packageData['packageId'] }}">
-            <input type="hidden" name="hotelId" value="{{ $photelsData['hotelId'] }}">
+            <input type="hidden" name="hotel_type" value="{{ $hotel_type }}">
               <div id="dynamic_field">
                @for($i = 0; $i < $packageData['adults']; $i++)
                     @if($i == 0)
@@ -214,7 +192,7 @@
               </b>
             </span>
           </div>
-          <div class="price_after_discount">
+       {{--    <div class="price_after_discount">
             <span class="price_after_discount1">
               <b>Hotel Price
               </b>
@@ -226,17 +204,17 @@
                 {{ $photelsData['hotelPrice'] }}
               </b>
             </span>
-          </div>
+          </div> --}}
            <div class="total_payable1">
               <span class="total_payable2">
-                <b>TOTAL AMOUNT
+                <b>Coupon
                 </b>
               </span>
               <span class="total_payable3">
                 <b>
                   <i class="fa fa-rupee">
-                  </i> <font id="total_amount">{{ ($sellingAmount + $photelsData['hotelPrice']) }}</font>
-                  <font id="old_total_amount" style="display: none;">{{ ($sellingAmount + $photelsData['hotelPrice']) }}</font>
+                  </i> <font id="coupon">0</font>
+                  <font id="old_coupon" style="display: none;">0</font>
                 </b>
               </span>
             </div>
@@ -249,7 +227,7 @@
               <i class="fa fa-rupee">
               </i> 
               @php
-              $gstAmount = (($sellingAmount + $photelsData['hotelPrice']) * 5) / 100;
+              $gstAmount = (($sellingAmount) * 5) / 100;
               @endphp
               <font id="gst_amount">{{ $gstAmount }}</font>
               <font id="old_gst_amount" style="display: none;">{{ $gstAmount }}</font>
@@ -264,9 +242,10 @@
               <span class="total_payable3">
                 <b>
                   <i class="fa fa-rupee">
-                  </i> <font id="total_payable_amount">{{ ($sellingAmount + $photelsData['hotelPrice'] + $gstAmount) }}</font>
-                  <font id="old_total_payable_amount" style="display: none;">{{ ($sellingAmount + $photelsData['hotelPrice'] + $gstAmount) }}</font>
-                  <input type="hidden" name="payableAmount" value="{{ ($sellingAmount + $photelsData['hotelPrice'] + $gstAmount) }}">
+                  </i> <font id="total_payable_amount">{{ ($sellingAmount + $gstAmount) }}</font>
+                  <input type="hidden" name="paid_amount" id="paid_amount" value="{{ ($sellingAmount + $gstAmount) }}" required>
+                  <font id="old_total_payable_amount" style="display: none;">{{ ($sellingAmount + $gstAmount) }}</font>
+                  <input type="hidden" name="payableAmount" value="{{ ($sellingAmount + $gstAmount) }}">
                 </b>
               </span>
             </div>
@@ -331,7 +310,7 @@
                     <i class="far fa-dot-circle">
                     </i> --}}
                     <div class="hs_pricing_toggle__text">
-                      <h5><b>Half Amount</b>
+                      <h5><b>Partial Amount</b>
                       </h5>
                       <p>
                       </p>
@@ -353,7 +332,7 @@
             <div class="perperson3">
               <span class="perperson4">
                 <i class="fa fa-rupee">
-                </i> <font id="payable_amount">{{ ($sellingAmount + $photelsData['hotelPrice'] + $gstAmount) }}</font>
+                </i> <font id="payable_amount">{{ ($sellingAmount + $gstAmount) }}</font>
                 {{-- <span>per person
                 </span>  --}}
               </span>
@@ -421,43 +400,45 @@ $(document).ready(function() {
 
   var total_days = {{ $packageData['totalDays'] }};
   
-  $("#submit").click(function(){
-      if($("#datepicker").val() == "") {
-          alert('Please ! Select Start Date');
-          return false;
-      }
-  });
+    $("#submit").click(function(){
+        if($("#datepicker").val() == "") {
+            alert('Please ! Select Start Date');
+            return false;
+        }
+    });
 
-  $("#datepicker").on("change",function(){
-    var selected = $(this).val();
-    var date_object = new Date();
-    var strDate = (date_object.getMonth()+1) + "/" + date_object.getDate() + "/" + date_object.getFullYear(); 
+    $("#datepicker").on("change",function(){
 
-    var selected_date = selected.split('/');
-    var new_selected_date = new Date(selected_date[0],selected_date[1],selected_date[2]);
+        var selected = $(this).val();
+        var date_object = new Date();
+        var strDate = (date_object.getMonth()+1) + "/" + date_object.getDate() + "/" + date_object.getFullYear(); 
 
-    var today_date = strDate.split('/');
-    var new_today_date= new Date(today_date[0],today_date[1],today_date[2]);
-    
-    if(new_selected_date < new_today_date){
-      $("#datepicker").val('');
-      alert("Please ! Select right date");
-    } else {
-      var result = new Date(selected);
-      result.setDate(result.getDate() + total_days);
-      let date = JSON.stringify(result)
-      date = date.slice(1,11);
-      var res = date.split("-");
-      $("#end_date").val(res[2]+"/"+res[1]+"/"+res[0]);
-      $("#start_date").val(selected);
-    }
-  });
+        var selected_date = selected.split('/');
+        var new_selected_date = new Date(selected_date[0],selected_date[1],selected_date[2]);
+
+        var today_date = strDate.split('/');
+        var new_today_date= new Date(today_date[0],today_date[1],today_date[2]);
+        
+        if(new_selected_date < new_today_date){
+            $("#datepicker").val('');
+            alert("Please ! Select right date");
+        } else {
+            
+            var result = new Date(selected);
+            result.setDate(result.getDate() + total_days);
+            let date = JSON.stringify(result)
+            date = date.slice(1,11);
+            var res = date.split("-");
+            $("#end_date").val(res[2]+"/"+res[1]+"/"+res[0]);
+            $("#start_date").val(selected);
+        }
+    });
 
     $('#chp41').change(function() {
 
         if(this.checked) {
 
-            $('#total_amount').text('Calculating...');
+            $('#coupon').text('Calculating...');
             $('#gst_amount').text('Calculating...');
             $('#total_payable_amount').text('Calculating...');
 
@@ -472,16 +453,16 @@ $(document).ready(function() {
                 type: "POST",
                 data: {
                     'packageId': {{ $packageData['packageId'] }},
-                    'total_persons_list': $('#total_persons_list').val(),
-                    'hotelId'  : {{ $photelsData['hotelId'] }}
+                    'total_persons_list': $('#total_persons').val()
                 },
                 success:function (response) {
 
                     var res = response.split(",");
 
-                    $('#total_amount').text(res[0]);
+                    $('#coupon').text(res[0]);
                     $('#gst_amount').text(res[1]);
                     $('#total_payable_amount').text(res[2]);
+                    $('#paid_amount').val(res[2]);
 
                     if(res[3] == 1)
                         $('#coupon_status').text("Coupon applied successfully");
@@ -492,18 +473,20 @@ $(document).ready(function() {
 
                         var total_payable_amount = $('#total_payable_amount').text(); 
                         $('#payable_amount').text(total_payable_amount);
+                        $('#paid_amount').val(total_payable_amount);
                     }
 
                     if ($("#payment_radio_half").is(":checked")) {
 
                         var total_payable_amount = parseInt($('#total_payable_amount').text()) / 2; 
                         $('#payable_amount').text(total_payable_amount);
+                        $('#paid_amount').val(total_payable_amount);
                     }
                 }
             });
         } else {
 
-            $('#total_amount').text($('#old_total_amount').text());
+            $('#coupon').text($('#old_coupon').text());
             $('#gst_amount').text($('#old_gst_amount').text());
             $('#total_payable_amount').text($('#old_total_payable_amount').text());
             $('#coupon_status').text("");
@@ -514,12 +497,14 @@ $(document).ready(function() {
 
         var total_payable_amount = $('#total_payable_amount').text(); 
         $('#payable_amount').text(total_payable_amount);
+        $('#paid_amount').val(total_payable_amount);
     });
 
     $('#payment_radio_half').click(function() {
 
         var total_payable_amount = parseInt($('#total_payable_amount').text()) / 2; 
-        $('#payable_amount').text(total_payable_amount);
+        $('#payable_amount').text(parseInt(total_payable_amount) / 2);
+        $('#paid_amount').val(parseInt(total_payable_amount) / 2);
     });
 });
 </script>

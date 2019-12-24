@@ -34,12 +34,12 @@
                           <td><a href="{{ route('admin.upload_p_facility_form', ['packageId' => $packageId]) }}" class="btn btn-warning form-text-element" target="_blank">Select Facility Form</a></td>
                         </tr>
                         <tr>
-                          <th scope="row">Package Hotel</th>
-                          <td><a href="{{ route('admin.upload_p_hotel_form', ['packageId' => $packageId]) }}" target="_blank" class="btn btn-info form-text-element">Select Hotel Form</a></td>
-                        </tr>
-                        <tr>
                           <th scope="row">Package Itenary</th>
                           <td><a href="{{ route('admin.upload_p_itenary_form', ['packageId' => $packageId]) }}" class="btn btn-success form-text-element" target="_blank">Package Itenary Form</a></td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Package Hotel</th>
+                          <td><a href="{{ route('admin.upload_p_hotel_form', ['packageId' => $packageId]) }}" target="_blank" class="btn btn-info form-text-element">Select Hotel Form</a></td>
                         </tr>
                       </tbody>
                     </table>

@@ -115,7 +115,11 @@
                 </th>
                 <th class="text-center">Price
                 </th>
-                <th class="text-center">Payment
+                <th class="text-center">Paid
+                </th>
+                <th class="text-center">Remaining
+                </th>
+                <th class="text-center">Status
                 </th>
                 <th class="text-center">More
                 </th>
@@ -141,6 +145,21 @@
 			                  </i> 
 			                  {{ $value['payableAmount'] }}
 			                </td>
+                            <td class="text-center">
+                              <i class="fa fa-rupee-sign">
+                              </i> 
+                              {{ $value['paid_amount'] }}
+                            </td>
+                            <td class="text-center">
+                              
+                              @if($value['remaining_amount'] <= 0)
+                                Clear
+                              @else
+                              <i class="fa fa-rupee-sign">
+                              </i> 
+                                {{ $value['remaining_amount'] }}
+                                @endif
+                            </td>
 			                <td class="text-center">
 			                  <span class="db-done">
 			                  	@if($value['paymentStatus'] == 1)

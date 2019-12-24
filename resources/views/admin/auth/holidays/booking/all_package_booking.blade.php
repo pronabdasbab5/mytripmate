@@ -39,10 +39,6 @@
                             <th>Pacakge Title</th>
                             <th>Duration</th>
                             <th>Location</th>
-                            <th>Hotel Type</th>
-                            <th>Hotel Name</th>
-                            <th>Hotel Address</th>
-                            <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -82,10 +78,6 @@ $(document).ready(function(){
             { "data": "pacakgeTitle" },
             { "data": "duration" },
             { "data": "location" },
-            { "data": "hotelType" },
-            { "data": "hotelName" },
-            { "data": "hotelAddress" },
-            { "data": "price" },
             { "data": "action" },
         ],    
     });

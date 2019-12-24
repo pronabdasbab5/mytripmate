@@ -119,7 +119,11 @@
                 </th>
                 <th class="text-center">Price
                 </th>
-                <th class="text-center">Payment
+                <th class="text-center">Paid
+                </th>
+                <th class="text-center">Remaining
+                </th>
+                <th class="text-center">Status
                 </th>
                 <th class="text-center">More
                 </th>
@@ -142,13 +146,25 @@
                   {{ $pbbdetailsData->payableAmount }}
                 </td>
                 <td class="text-center">
-                  <span class="db-done">
-                    @if($pbbdetailsData->paymentStatus == 1)
-                        {{ "Paid" }}
+                    <i class="fa fa-rupee-sign"></i> 
+                    {{ $pbbdetailsData->paid_amount }}
+                </td>
+                <td class="text-center">
+                    @if($pbbdetailsData->remaining_amount <= 0)
+                    Clear
                     @else
-                        {{ "Pending" }}
+                    <i class="fa fa-rupee-sign"></i> 
+                    {{ $pbbdetailsData->remaining_amount }}
                     @endif
-                  </span>
+                </td>
+                <td class="text-center">
+                    <span class="db-done">
+                        @if($pbbdetailsData->paymentStatus == 1)
+                            {{ "Paid" }}
+                        @else
+                            {{ "Pending" }}
+                        @endif
+                    </span>
                 </td>
                 <td class="text-center">
                   <a href="{{ route('travel_booking_details', ['user_id' => Auth::user()->id, 'booking_id' => $pbbdetailsData->id]) }}" class="db-done">view more details

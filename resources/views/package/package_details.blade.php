@@ -63,6 +63,45 @@
               </span>
             </h2> 
           </div>
+
+          <br>
+          <div class="col-md-12 holiday_pack_date" style="margin-bottom: 10px;">
+            <div class="col-md-2">
+                Trip Duration 
+            </div>
+            
+            <div class="col-md-2 holiday_pack_date1 ">
+              <input id="datepicker" value="" placeholder="Start Date" required style="margin-top: 8px;height: 25px;">
+            </div>
+            <div class="col-md-3">
+               -  <input id="end_date" value="" placeholder="End Date" required style="width: 90%;margin-top: -4px;border: none;">
+            </div>
+            <div class="col-md-2">
+                  {{-- {{ $packageData['totalDays'] }}D / {{ $packageData['totalNights'] }}N --}}
+            </div>
+            <div class="col-md-3">
+               (Child upto 5 Yrs Free)
+            </div>
+          </div>
+         
+          <div class="row">
+                <div class="col-md-3 col-sm-3" style="margin-top: 5px; padding-left:8px">
+                    Number of Persons : 
+                </div>
+                <div class="col-md-2 col-sm-2">
+                    <select name="total_persons_list" id="total_persons_list" required>
+                        @if(count($total_persons_list) > 0)
+                            @foreach($total_persons_list as $key => $value)
+                              @if ($value->totalPersons == $min_person )
+                                <option value="{{ $value->totalPersons }}" selected>{{ $value->totalPersons }}</option>
+                              @else
+                                <option value="{{ $value->totalPersons }}">{{ $value->totalPersons }}</option>
+                              @endif
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+          </div>
           <!--====== TOUR DESCRIPTION ==========-->
           <div class="tour_head1">
             <h3>Description
@@ -82,20 +121,21 @@
                 </p>
                 <div class="col-md-12 tables-bgs">
                   <div class="col-md-3 text-left">
-                    <input id="selection1" onclick="update_amount(1);" class="active" type="radio" name="group1" value="charge" checked="checked"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Budget
+                    <input id="selection1" onclick="update_hotel_type(1);" class="active" type="radio" name="group1" value="charge" checked="checked"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Budget
                   </div>
                   <div class="col-md-3">
-                    <input id="selection2" onclick="update_amount(2);" type="radio" name="group1" value="charge1"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delux
+                    <input id="selection2" onclick="update_hotel_type(2);" type="radio" name="group1" value="charge1"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delux
                   </div>
                 </div>
-                @if(count($photelsBudgetData) > 0)
+                @if(!empty($photelsBudgetData))
                     <table id="charge" class="charge-table tables-borders check">
+                        @foreach($photelsBudgetData as $key => $item)
                       <tr>
-                        <td width="50%" class="tables-pads" >{!! $photelsBudgetData[0]->hotelAddress !!}
+                        <td width="50%" class="tables-pads" >{!! $item->hotelAddress !!}
                         </td>
                         <td width="25%" class="tables-pads">Hotel Pages
                         </td>
-                        <td class="tables-pads">{{ $photelsBudgetData[0]->rating }}  
+                        <td class="tables-pads">{{ $item->rating }}  
                           <span class="fa fa-star">
                           </span>
                         </td>
@@ -103,7 +143,7 @@
                           <div class="star-center">
                             <span class="pull-right">
                                 @for($i = 0; $i < 5; $i++)
-                                    @if($i < $photelsBudgetData[0]->rating)
+                                    @if($i < $item->rating)
                                         <span class="fa fa-star asap-star-check"></span>
                                     @else
                                         <span class="fa fa-star"></span>
@@ -113,17 +153,18 @@
                           </div>
                         </td>
                       </tr>
+                      @endforeach
                     </table>
-                    <input type="hidden" id="hotel_id1" value="{{ $photelsBudgetData[0]->id }}">
                 @endif
-                @if(count($photelsDeluxData) > 0)
+                @if(!empty($photelsDeluxData))
                   <table id="charge1" class="charge-table tables-borders" style="display:none;">
+                    @foreach($photelsDeluxData as $key => $item)
                     <tr>
-                      <td class="tables-pads" >{!! $photelsDeluxData[0]->hotelAddress !!}
+                      <td class="tables-pads" >{!! $item->hotelAddress !!}
                       </td>
                       <td class="tables-pads">Hotel Pages
                       </td>
-                      <td class="tables-pads">{{ $photelsDeluxData[0]->rating }}  
+                      <td class="tables-pads">{{ $item->rating }}  
                         <span class="fa fa-star">
                         </span>
                       </td>
@@ -131,7 +172,7 @@
                         <div class="star-center">
                           <span class="pull-right">
                             @for($i = 0; $i < 5; $i++)
-                                @if($i < $photelsDeluxData[0]->rating)
+                                @if($i < $item->rating)
                                     <span class="fa fa-star asap-star-check"></span>
                                 @else
                                     <span class="fa fa-star"></span>
@@ -140,8 +181,8 @@
                         </div>
                       </td>
                     </tr>
+                    @endforeach
                   </table>
-                  <input type="hidden" id="hotel_id2" value="{{ $photelsDeluxData[0]->id }}">
                 @endif
               <p class="asap-filter">Also Included
               </p>
@@ -292,7 +333,7 @@
         <h3>Price</h3>
         <h4>
           <span class="n-td">
-            <span class="n-td-1 rupee" ><i class="fa fa-rupee"></i><font id="actual_price">{{ ($package_price + $photelsBudgetData[0]->price) }}</font>
+            <span class="n-td-1 rupee" ><i class="fa fa-rupee"></i><font id="actual_price">{{ ($package_price) }}</font>
             </span>
           </span><br><i class="fa fa-rupee rupee1" id="selling_price">
             @if(!empty($packageData[0]->offer))
@@ -300,19 +341,23 @@
                     $discount      = ($package_price * $packageData[0]->offer) / 100;
                     $selling_price = ($package_price - $discount);
 
-                    $selling_price = $selling_price + $photelsBudgetData[0]->price;
+                    $selling_price = $selling_price;
                 @endphp
                 {{ $selling_price }}
             @else
-                {{ ($package_price + $photelsBudgetData[0]->price) }}
+                {{ ($package_price) }}
             @endif
           </i>
         </h4> 
+        <center>(Per Pex.)</center>
         <form action="{{ route('package_booking_form') }}" method="GET" autocomplete="off">
             @csrf
             <input type="hidden" name="package_id" value="{{ $packageData[0]->id }}" required>
-            <input type="hidden" name="hotel_id" id="hotel_id_form" value="{{ $photelsBudgetData[0]->id }}" required>
-            <a><button type="submit">Book Now</button></a> 
+            <input type="hidden" name="hotel_type" id="hotel_type" value="1" required>
+            <input type="hidden" name="total_persons_list" id="total_person" value="{{ $min_person }}" required>
+            <input type="hidden" name="start_date_text" id="start_date_text" required>
+            <input type="hidden" name="end_date_text" id="end_date_text" required>
+            <a><button type="submit" id="submit">Book Now</button></a> 
         </form>
       </div>
       <!--====== TRIP INFORMATION ==========-->
@@ -396,35 +441,53 @@
 
 @section('script')
 <script type="text/javascript">
-
-function update_amount (id) {
+function update_hotel_type (type) {
     
-    var hotel_id = $('#hotel_id'+id).val();
-
-    $('#actual_price').text("Calculating....");
-    $('#selling_price').text("Calculating....");
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-    });
-
-    $.ajax({
-        url: "{{ url('package_price_change') }}",
-        type: "POST",
-        data: {
-            'packageId': {{ $packageData[0]->id }},
-            'hotelId'  :  hotel_id 
-        },
-        success:function (response) {
-
-            var res = response.split(",");
-            $('#actual_price').text(res[0]);
-            $('#selling_price').text(res[1]);
-            $('#hotel_id_form').val(hotel_id);
-        }
-    });
+    $('#hotel_type').val(type);
 }
+
+$(document).ready(function() {
+
+    $("#submit").click(function(){
+      if($("#datepicker").val() == "") {
+          alert('Please ! Select Start Date');
+          return false;
+      }
+  });
+
+  var total_days = {{ $packageData[0]->totalDays }};
+
+  $("#datepicker").on("change",function(){
+    var selected = $(this).val();
+    var date_object = new Date();
+    var strDate = (date_object.getMonth()+1) + "/" + date_object.getDate() + "/" + date_object.getFullYear(); 
+
+    var selected_date = selected.split('/');
+    var new_selected_date = new Date(selected_date[0],selected_date[1],selected_date[2]);
+
+    var today_date = strDate.split('/');
+    var new_today_date= new Date(today_date[0],today_date[1],today_date[2]);
+    
+    if(new_selected_date < new_today_date){
+      $("#datepicker").val('');
+      alert("Please ! Select right date");
+    } else {
+      var result = new Date(selected);
+      result.setDate(result.getDate() + total_days);
+      let date = JSON.stringify(result)
+      date = date.slice(1,11);
+      var res = date.split("-");
+      $("#end_date").val(res[2]+"/"+res[1]+"/"+res[0]);
+      $("#start_date").val(selected);
+     $("#end_date_text").val(res[2]+"/"+res[1]+"/"+res[0]);
+      $("#start_date_text").val(selected);
+    }
+  });
+
+  $('#total_persons_list').change(function(){
+
+    $('#total_person').val($('#total_persons_list').val());
+  });
+});
 </script>
 @endsection

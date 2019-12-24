@@ -8,5 +8,5 @@ class PItenary extends Model
 {
     protected $table = 'package_itenary';
 
-    protected $fillable = ['packageId', 'days', 'title', 'desc', 'image'];
+    protected $fillable = ['packageId', 'days', 'title', 'location', 'desc', 'image'];
 }
